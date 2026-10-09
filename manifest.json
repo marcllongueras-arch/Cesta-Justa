@@ -1,0 +1,17 @@
+{
+  "name": "Cesta Justa",
+  "short_name": "Cesta Justa",
+  "description": "Presupuesto de la compra, comparador de supermercados y análisis de salud de productos.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F3F5F0",
+  "theme_color": "#1F5E4B",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
