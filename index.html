@@ -264,6 +264,9 @@ const SAMPLE = [
 const ORDER = ["mercadona","carrefour","dia","alcampo","eroski"];
 let CATALOG = SAMPLE.map((r,i)=>({id:"p"+i,name:r[0],cat:r[1],prices:Object.fromEntries(ORDER.map((c,j)=>[c,r[2][j]]))}));
 let DATA_SOURCE = "ejemplo"; let DATA_DATE = null;
+let DATA_CHAINS = ORDER.slice(); // cadenas con precios en los datos cargados
+const prepare = list => list.forEach(p => { p._n = norm(p.name + " " + (p.sub||"") + " " + p.cat); });
+const sizeOf = p => [p.pack, p.size].filter(Boolean).join(" · ");
 
 /* ---------- Almacenamiento ---------- */
 const store = {
@@ -326,15 +329,17 @@ $("#pList").addEventListener("click",e=>{const id=e.target.dataset.del;if(!id)re
 /* ---------- Lista habitual ---------- */
 function renderList(){
   $("#lList").innerHTML = S.list.length ? S.list.map(it=>{const p=byId(it.id);if(!p)return"";
-    return `<li><div class="grow"><div class="name">${esc(p.name)}</div><div class="small muted">${esc(p.cat)}</div></div>
+    return `<li><div class="grow"><div class="name">${esc(p.name)}</div><div class="small muted">${esc(sizeOf(p)||p.cat)}</div></div>
     <div class="qty"><button type="button" data-dec="${p.id}" aria-label="Menos">−</button><span class="num">${it.q}</span><button type="button" data-inc="${p.id}" aria-label="Más">+</button></div></li>`}).join("")
     : `<li class="muted small">Tu lista está vacía. Busca arriba para añadir productos.</li>`;
 }
 $("#lSearch").addEventListener("input",()=>{
   const q=norm($("#lSearch").value.trim()); const box=$("#lSuggest");
   if(q.length<2){box.hidden=true;return}
-  const hits=CATALOG.filter(p=>norm(p.name+" "+p.cat).includes(q)).slice(0,6);
-  box.innerHTML = hits.length ? hits.map(p=>`<button type="button" data-add="${p.id}">${esc(p.name)} <span class="muted small">· ${esc(p.cat)}</span></button>`).join("") : `<button type="button" disabled>Sin resultados en el catálogo</button>`;
+  const words=q.split(/\s+/);
+  const hits=CATALOG.filter(p=>words.every(w=>p._n.includes(w))).slice(0,8);
+  box.innerHTML = hits.length ? hits.map(p=>{const best=Math.min(...Object.values(p.prices).filter(v=>v!=null));
+    return `<button type="button" data-add="${p.id}">${esc(p.name)} <span class="muted small">· ${esc(sizeOf(p)||p.cat)} · <span class="num">${eur(best)}</span></span></button>`}).join("") : `<button type="button" disabled>Sin resultados en el catálogo</button>`;
   box.hidden=false;
 });
 $("#lSuggest").addEventListener("click",e=>{const b=e.target.closest("[data-add]");if(!b)return;const id=b.dataset.add;
@@ -352,8 +357,10 @@ function shippingFor(chain,subtotal){const c=CHAINS[chain];if(c.ship==null)retur
 let lastBest=null;
 function renderCompare(){
   const out=$("#cmpOut"); lastBest=null;
+  $("#dataNote").textContent = DATA_SOURCE==="ejemplo" ? "Precios de ejemplo para probar la app. Los precios reales se cargarán cuando esté listo precios.json." : `Precios reales de la tienda online (${DATA_CHAINS.map(c=>CHAINS[c].name).join(", ")}), actualizados el ${new Date(DATA_DATE).toLocaleDateString("es-ES",{day:"numeric",month:"long"})}. Pueden variar en la tienda física.`;
   if(!S.list.length){out.innerHTML=`<p class="muted small">Añade productos para comparar.</p>`;$("#cmpSplit").textContent="";return}
-  let chains=Object.keys(CHAINS);
+  let chains=DATA_CHAINS.slice();
+  const noData=Object.keys(CHAINS).filter(c=>!DATA_CHAINS.includes(c));
   const onlyNear=$("#onlyNear").checked;
   if(onlyNear){ if(!S.near){out.innerHTML=`<p class="muted small">Primero busca tu código postal en la pestaña Supers.</p>`;$("#cmpSplit").textContent="";return}
     chains=chains.filter(c=>S.near.chains.includes(c)); }
@@ -369,14 +376,14 @@ function renderCompare(){
     if(S.mode==="online") extra.push(r.ship==null?"envío: consultar":r.ship===0?"envío gratis":"envío "+eur(r.ship));
     if(r.missing.length) extra.push(`falta${r.missing.length>1?"n":""} ${r.missing.length}: ${r.missing.slice(0,2).join(", ")}${r.missing.length>2?"…":""}`);
     if(S.near&&!onlyNear) extra.push(r.near?"cerca de ti":"no hay cerca");
-    const link = S.mode==="online" ? ` · <a href="${CHAINS[r.c].url(byId(S.list[0].id)?.name||"")}" target="_blank" rel="noopener">tienda online</a>` : "";
+    const link = S.mode==="online" ? ` · <a href="${CHAINS[r.c].url("")}" target="_blank" rel="noopener">tienda online</a>` : "";
     return `<div class="trow ${r===best?"best":""}"><span class="rank">${i+1}.</span><span class="who"><span class="dot" style="background:${CHAINS[r.c].color}"></span>${CHAINS[r.c].name}<small>${extra.join(" · ")}${link}</small></span><span class="tot">${eur(r.total)}</span></div>`}).join("")
+    + (onlyNear?"":noData.map(c=>`<div class="trow"><span class="rank">–</span><span class="who" style="color:var(--muted)"><span class="dot" style="background:${CHAINS[c].color}"></span>${CHAINS[c].name}<small>sin precios todavía</small></span><span class="tot muted">—</span></div>`).join(""))
     : `<p class="muted small">No hay cadenas con precios cerca de tu código postal.</p>`;
   // Mejor combinación tienda a tienda
-  let split=0,ok=true; S.list.forEach(it=>{const p=byId(it.id);const ps=chains.map(c=>p.prices[c]).filter(v=>v!=null);if(!ps.length)ok=false;else split+=Math.min(...ps)*it.q});
+  let split=0,ok=true; S.list.forEach(it=>{const p=byId(it.id);if(!p){ok=false;return}const ps=chains.map(c=>p.prices[c]).filter(v=>v!=null);if(!ps.length)ok=false;else split+=Math.min(...ps)*it.q});
   const save_=best?best.total-split:0;
-  $("#cmpSplit").textContent = ok&&rows.length ? `Comprando cada producto donde es más barato: ${eur(split)}${save_>0.009?` (ahorras ${eur(save_)} más, pero vas a varias tiendas).`:"."}` : "";
-  $("#dataNote").textContent = DATA_SOURCE==="ejemplo" ? "Precios de ejemplo para probar la app. En la fase 2 se cargarán los precios reales desde precios.json." : `Precios reales actualizados el ${DATA_DATE}.`;
+  $("#cmpSplit").textContent = ok&&rows.length>1 ? `Comprando cada producto donde es más barato: ${eur(split)}${save_>0.009?` (ahorras ${eur(save_)} más, pero vas a varias tiendas).`:"."}` : "";
 }
 $("#cmpRegister").addEventListener("click",()=>{if(!lastBest)return;
   S.purchases.push({id:Date.now().toString(36),store:lastBest.c,amount:Math.round(lastBest.total*100)/100,date:new Date().toISOString(),note:"lista habitual"});
@@ -387,14 +394,20 @@ const cats=[...new Set(CATALOG.map(p=>p.cat))];
 function fillCats(){$("#sCat").innerHTML=`<option value="">Todas las categorías</option>`+[...new Set(CATALOG.map(p=>p.cat))].map(c=>`<option>${esc(c)}</option>`).join("")}
 function renderSearch(){
   const q=norm($("#sQuery").value.trim()), cat=$("#sCat").value;
-  let hits=CATALOG.filter(p=>(!cat||p.cat===cat)&&(!q||norm(p.name).includes(q)));
-  if(!q&&!cat) hits=hits.slice(0,6);
-  $("#sOut").innerHTML = hits.length ? hits.map(p=>{
+  const words=q?q.split(/\s+/):[];
+  let hits=CATALOG.filter(p=>(!cat||p.cat===cat)&&words.every(w=>p._n.includes(w)));
+  const total=hits.length;
+  if(!q&&!cat){$("#sOut").innerHTML=`<p class="muted">Escribe un producto o elige una categoría. Hay ${CATALOG.length.toLocaleString("es-ES")} productos en el catálogo.</p>`;return}
+  hits=hits.slice(0,30);
+  $("#sOut").innerHTML = hits.length ? (total>30?`<p class="small muted">Mostrando 30 de ${total.toLocaleString("es-ES")}. Afina la búsqueda para ver menos.</p>`:"")+hits.map(p=>{
     const ps=Object.entries(p.prices).filter(([,v])=>v!=null).sort((a,b)=>a[1]-b[1]);
     const min=ps[0]?.[1], max=ps[ps.length-1]?.[1];
-    return `<div class="panel"><div class="row" style="justify-content:space-between"><div class="grow"><div class="name">${esc(p.name)}</div><div class="small muted">${esc(p.cat)}${max>min?` · diferencia ${eur(max-min)}`:""}</div></div>
-    <button type="button" class="ghost" data-tolist="${p.id}">+ Lista</button></div>
-    <div class="ticket">${ps.map(([c,v],i)=>`<div class="trow ${i===0?"best":""}"><span class="rank">${i+1}.</span><span class="who"><span class="dot" style="background:${CHAINS[c].color}"></span>${CHAINS[c].name}<small>${S.near?(S.near.chains.includes(c)?"cerca de ti · ":"no hay cerca · "):""}<a href="${CHAINS[c].url(p.name)}" target="_blank" rel="noopener">ver online</a></small></span><span class="tot">${eur(v)}</span></div>`).join("")}</div></div>`}).join("")
+    return `<div class="panel"><div class="row" style="flex-wrap:nowrap;align-items:flex-start">
+    ${p.img?`<img src="${esc(p.img)}" alt="" loading="lazy" style="width:56px;height:56px;object-fit:contain;border-radius:8px;background:#fff;flex:none">`:""}
+    <div class="grow" style="min-width:0"><div class="name">${esc(p.name)}</div><div class="small muted">${esc([sizeOf(p),p.sub||p.cat].filter(Boolean).join(" · "))}${max>min?` · diferencia ${eur(max-min)}`:""}</div></div>
+    <button type="button" class="ghost" data-tolist="${p.id}" style="flex:none">+ Lista</button></div>
+    <div class="ticket">${ps.map(([c,v],i)=>{const was=p.prev?.[c];const ref=p.ref?.[c];const url=p.url?.[c]||CHAINS[c].url(p.name);
+      return `<div class="trow ${i===0&&ps.length>1?"best":""}"><span class="rank">${i+1}.</span><span class="who"><span class="dot" style="background:${CHAINS[c].color}"></span>${CHAINS[c].name}${was?' <span class="pill">Rebajado</span>':""}<small>${ref?esc(ref)+" · ":""}${S.near?(S.near.chains.includes(c)?"cerca de ti · ":"no hay cerca · "):""}<a href="${esc(url)}" target="_blank" rel="noopener">ver online</a></small></span><span class="tot">${was?`<s class="muted small">${eur(was)}</s> `:""}${eur(v)}</span></div>`}).join("")}</div></div>`}).join("")
     : `<p class="muted">No hay resultados. Prueba con otra palabra.</p>`;
 }
 $("#sQuery").addEventListener("input",renderSearch);$("#sCat").addEventListener("change",renderSearch);
@@ -513,12 +526,17 @@ async function loadRealPrices(){
   try{
     const r=await fetch("precios.json",{cache:"no-cache"});if(!r.ok)return;
     const j=await r.json();
-    if(Array.isArray(j.products)&&j.products.length){CATALOG=j.products;DATA_SOURCE="real";DATA_DATE=j.updated||"";fillCats();renderList();renderCompare();renderSearch()}
+    if(Array.isArray(j.products)&&j.products.length){
+      CATALOG=j.products;prepare(CATALOG);DATA_SOURCE="real";DATA_DATE=j.updated||"";
+      DATA_CHAINS=Object.keys(j.chains||{}).filter(c=>CHAINS[c]);
+      const before=S.list.length; S.list=S.list.filter(it=>byId(it.id));
+      if(S.list.length!==before){save("list"); if(!store.get("realNotice",false)){store.set("realNotice",true);toast("Ya hay precios reales: añade tus productos a la lista")}}
+      fillCats();renderList();renderCompare();renderSearch()}
   }catch(e){}
 }
 
 /* ---------- Inicio ---------- */
-fillCats();renderBudget();renderList();renderCompare();renderSearch();renderHealth();renderNear();loadRealPrices();
+prepare(CATALOG);fillCats();renderBudget();renderList();renderCompare();renderSearch();renderHealth();renderNear();loadRealPrices();
 if("serviceWorker" in navigator && location.protocol==="https:"){navigator.serviceWorker.register("sw.js").catch(()=>{})}
 </script>
 </body>
