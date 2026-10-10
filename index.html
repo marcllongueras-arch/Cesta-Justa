@@ -266,6 +266,7 @@ let CATALOG = SAMPLE.map((r,i)=>({id:"p"+i,name:r[0],cat:r[1],prices:Object.from
 let DATA_SOURCE = "ejemplo"; let DATA_DATE = null;
 let DATA_CHAINS = ORDER.slice(); // cadenas con precios en los datos cargados
 const prepare = list => list.forEach(p => { p._n = norm(p.name + " " + (p.sub||"") + " " + p.cat); });
+const thumb = (p,n) => p.img ? `<img src="${esc(p.img)}" alt="" loading="lazy" width="${n}" height="${n}" style="width:${n}px;height:${n}px;object-fit:contain;border-radius:8px;background:#fff;flex:none">` : `<span style="width:${n}px;height:${n}px;border-radius:8px;background:var(--bg);flex:none"></span>`;
 const sizeOf = p => [p.pack, p.size].filter(Boolean).join(" · ");
 
 /* ---------- Almacenamiento ---------- */
@@ -329,7 +330,7 @@ $("#pList").addEventListener("click",e=>{const id=e.target.dataset.del;if(!id)re
 /* ---------- Lista habitual ---------- */
 function renderList(){
   $("#lList").innerHTML = S.list.length ? S.list.map(it=>{const p=byId(it.id);if(!p)return"";
-    return `<li><div class="grow"><div class="name">${esc(p.name)}</div><div class="small muted">${esc(sizeOf(p)||p.cat)}</div></div>
+    return `<li>${thumb(p,44)}<div class="grow"><div class="name">${esc(p.name)}</div><div class="small muted">${esc(sizeOf(p)||p.cat)}</div></div>
     <div class="qty"><button type="button" data-dec="${p.id}" aria-label="Menos">−</button><span class="num">${it.q}</span><button type="button" data-inc="${p.id}" aria-label="Más">+</button></div></li>`}).join("")
     : `<li class="muted small">Tu lista está vacía. Busca arriba para añadir productos.</li>`;
 }
@@ -339,7 +340,7 @@ $("#lSearch").addEventListener("input",()=>{
   const words=q.split(/\s+/);
   const hits=CATALOG.filter(p=>words.every(w=>p._n.includes(w))).slice(0,8);
   box.innerHTML = hits.length ? hits.map(p=>{const best=Math.min(...Object.values(p.prices).filter(v=>v!=null));
-    return `<button type="button" data-add="${p.id}">${esc(p.name)} <span class="muted small">· ${esc(sizeOf(p)||p.cat)} · <span class="num">${eur(best)}</span></span></button>`}).join("") : `<button type="button" disabled>Sin resultados en el catálogo</button>`;
+    return `<button type="button" data-add="${p.id}" style="display:flex;gap:10px;align-items:center">${thumb(p,36)}<span style="min-width:0">${esc(p.name)} <span class="muted small">· ${esc(sizeOf(p)||p.cat)} · <span class="num">${eur(best)}</span></span></span></button>`}).join("") : `<button type="button" disabled>Sin resultados en el catálogo</button>`;
   box.hidden=false;
 });
 $("#lSuggest").addEventListener("click",e=>{const b=e.target.closest("[data-add]");if(!b)return;const id=b.dataset.add;

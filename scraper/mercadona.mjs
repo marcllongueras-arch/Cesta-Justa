@@ -1,12 +1,7 @@
-// Descarga el catálogo de la tienda online de Mercadona y lo guarda en precios.json.
-// Se ejecuta cada día en GitHub Actions (ver .github/workflows/precios.yml).
-// Uso local: node scraper/mercadona.mjs   (opcional: CP=08001 node scraper/mercadona.mjs)
-import { writeFile, readFile } from "node:fs/promises";
+// Catálogo de la tienda online de Mercadona (API interna de tienda.mercadona.es).
 
 const BASE = "https://tienda.mercadona.es/api";
-const CP = process.env.CP || "";        // código postal para elegir el almacén (precios de esa zona)
 let WH = process.env.WH || "";          // código de almacén, si ya se conoce
-const OUT = process.env.OUT || "precios.json";
 const HEADERS = { "Accept": "application/json", "User-Agent": "CestaJusta/1.0 (uso personal)" };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -47,20 +42,23 @@ function toProduct(p, cat, sub) {
   const ref = num(pi.reference_price);
   return {
     id: "m" + p.id,
+    chain: "mercadona",
     name: p.display_name,
-    pack: p.packaging || "",
-    size: pi.unit_size && pi.size_format ? `${String(pi.unit_size).replace(".", ",")} ${pi.size_format}` : "",
+    brand: "",
+    desc: [p.packaging, pi.unit_size && pi.size_format ? `${pi.unit_size} ${pi.size_format}` : ""].filter(Boolean).join(" "),
     cat, sub,
     img: p.thumbnail || "",
-    prices: { mercadona: price },
-    ref: ref != null ? { mercadona: `${ref.toFixed(2).replace(".", ",")} €/${pi.reference_format || "ud"}` } : {},
-    prev: prev && prev > price ? { mercadona: prev } : undefined,
-    url: { mercadona: p.share_url || `https://tienda.mercadona.es/product/${p.id}` }
+    price,
+    prev: prev && prev > price ? prev : null,
+    refPrice: ref,
+    refUnit: pi.reference_format || "",
+    ean: "",
+    url: p.share_url || `https://tienda.mercadona.es/product/${p.id}`
   };
 }
 
-async function main() {
-  if (!WH && CP) WH = await warehouseForCP(CP);
+export async function scrapeMercadona(cp = process.env.CP || "") {
+  if (!WH && cp) WH = await warehouseForCP(cp);
   const q = `lang=es${WH ? "&wh=" + WH : ""}`;
 
   const root = await getJSON(`${BASE}/categories/?${q}`);
@@ -68,10 +66,8 @@ async function main() {
   if (!groups.length) throw new Error("La lista de categorías vino vacía: puede que la web haya cambiado.");
 
   const seen = new Map();
-  let subcats = 0;
   for (const g of groups) {
     for (const c of g.categories || []) {
-      subcats++;
       const data = await getJSON(`${BASE}/categories/${c.id}/?${q}`);
       for (const block of data?.categories || []) {
         for (const p of block.products || []) {
@@ -79,32 +75,10 @@ async function main() {
           if (prod && !seen.has(prod.id)) seen.set(prod.id, prod);
         }
       }
-      await sleep(250); // sin prisas: no saturar la web
+      await sleep(250);
     }
   }
-
-  const products = [...seen.values()].sort((a, b) => a.cat.localeCompare(b.cat, "es") || a.name.localeCompare(b.name, "es"));
-  if (products.length < 500) throw new Error(`Solo ${products.length} productos: algo ha fallado, no se guarda nada.`);
-
-  // Historial corto de precios (últimos 30 cambios por producto) para ver subidas y bajadas
-  let history = {};
-  try { history = JSON.parse(await readFile("historial.json", "utf8")); } catch {}
-  const today = new Date().toISOString().slice(0, 10);
-  for (const p of products) {
-    const h = history[p.id] || (history[p.id] = []);
-    const last = h[h.length - 1];
-    if (!last || last[1] !== p.prices.mercadona) h.push([today, p.prices.mercadona]);
-    if (h.length > 30) h.splice(0, h.length - 30);
-  }
-
-  const out = {
-    updated: today,
-    chains: { mercadona: { products: products.length, warehouse: WH || "por defecto", cp: CP || null } },
-    products
-  };
-  await writeFile(OUT, JSON.stringify(out));
-  await writeFile("historial.json", JSON.stringify(history));
-  console.log(`OK: ${products.length} productos de ${subcats} subcategorías (almacén ${WH || "por defecto"}).`);
+  const products = [...seen.values()];
+  if (products.length < 500) throw new Error(`Mercadona: solo ${products.length} productos.`);
+  return { products, meta: { products: products.length, warehouse: WH || "por defecto", cp: cp || null } };
 }
-
-main().catch(e => { console.error("ERROR:", e.message); process.exit(1); });
