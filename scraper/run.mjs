@@ -4,13 +4,14 @@ import { readFile, writeFile } from "node:fs/promises";
 import { scrapeMercadona } from "./mercadona.mjs";
 import { scrapeConsum } from "./consum.mjs";
 import { scrapeAhorramas } from "./ahorramas.mjs";
+import { scrapeLidl } from "./lidl.mjs";
 import { normalize } from "./normalize.mjs";
 
 const ocado = name => async () => (await import("./ocado.mjs"))[name]();
-const SOURCES = { mercadona: scrapeMercadona, consum: scrapeConsum, ahorramas: scrapeAhorramas, alcampo: ocado("scrapeAlcampo"), bonpreu: ocado("scrapeBonpreu") };
+const SOURCES = { mercadona: scrapeMercadona, consum: scrapeConsum, ahorramas: scrapeAhorramas, lidl: scrapeLidl, alcampo: ocado("scrapeAlcampo"), bonpreu: ocado("scrapeBonpreu") };
 // Alcampo y Bonpreu bloquean las conexiones desde servidores: solo se intentan si se piden expresamente
 // (o cuando el script se ejecute desde una conexión de casa).
-const DEFAULT = ["mercadona", "consum", "ahorramas"];
+const DEFAULT = ["mercadona", "consum", "ahorramas", "lidl"];
 const only = (process.env.ONLY || "").split(",").filter(Boolean);
 if (!only.length) only.push(...DEFAULT);
 

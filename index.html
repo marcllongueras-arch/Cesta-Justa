@@ -352,11 +352,12 @@ const CHAINS = {
   alcampo:{name:"Alcampo", color:"#FF5C5C", ship:null, freeFrom:null, re:/alcampo|auchan/i, home:"https://www.compraonline.alcampo.es/"},
   ahorramas:{name:"Ahorramás", color:"#F2C230", ship:null, freeFrom:null, re:/ahorram/i, home:"https://www.ahorramas.com/"},
   bonpreu:{name:"Bonpreu", color:"#5AC8FA", ship:null, freeFrom:null, re:/bon ?preu|esclat/i, home:"https://www.compraonline.bonpreuesclat.cat/"},
+  lidl:{name:"Lidl", color:"#3D7DFF", ship:null, freeFrom:null, re:/lidl/i, home:"https://www.lidl.es/"},
   carrefour:{name:"Carrefour", color:"#4C8DFF", ship:7.99, freeFrom:null, re:/carrefour/i, home:"https://www.carrefour.es/supermercado/"},
   dia:{name:"Dia", color:"#E8405A", ship:4.99, freeFrom:100, re:/\bdia\b|día/i, home:"https://www.dia.es/"},
   eroski:{name:"Eroski", color:"#C77DFF", ship:null, freeFrom:null, re:/eroski/i, home:"https://supermercado.eroski.es/"}
 };
-const OTHER = [["lidl",/lidl/i,"Lidl"],["aldi",/aldi/i,"Aldi"],["condis",/condis/i,"Condis"],["caprabo",/caprabo/i,"Caprabo"],["bonarea",/bon ?àrea|bonarea/i,"bonÀrea"],["spar",/spar/i,"Spar"]];
+const OTHER = [["aldi",/aldi/i,"Aldi"],["condis",/condis/i,"Condis"],["caprabo",/caprabo/i,"Caprabo"],["bonarea",/bon ?àrea|bonarea/i,"bonÀrea"],["spar",/spar/i,"Spar"]];
 const chainName = k => CHAINS[k]?.name || (OTHER.find(o=>o[0]===k)||[])[2] || (k==="otro"?"Otra tienda":k);
 const chainColor = k => CHAINS[k]?.color || "#5D5B78";
 
@@ -414,7 +415,7 @@ const refresh=()=>{const cur=stack[stack.length-1];(RENDER[cur.id]||(()=>{}))(cu
 /* ================= Datos de precios ================= */
 let DF=new Map(); const idf=t=>Math.log(1+PRODUCTS.length/((DF.get(t)||0)+1));
 let PRODUCTS=[], BY_ID=new Map(), BY_CHAIN={}, META={chains:{},updated:null}, LOADED=false, LOAD_ERR=false;
-const STOP = new Set("de del la el los las y con sin en para al a o pack brik brick botella bote paquete bolsa lata tarro garrafa caja bandeja malla barqueta tarrina vaso frasco envase hacendado consum deliplus bosque verde compy carrefour dia alcampo auchan eroski bonpreu ahorramas alipende granel aprox pieza piezas unidad unidades ud uds g kg ml l cl x formato familiar docena media".split(" "));
+const STOP = new Set("de del la el los las y con sin en para al a o pack brik brick botella bote paquete bolsa lata tarro garrafa caja bandeja malla barqueta tarrina vaso frasco envase hacendado consum lidl milbona deliplus bosque verde compy carrefour dia alcampo auchan eroski bonpreu ahorramas alipende granel aprox pieza piezas unidad unidades ud uds g kg ml l cl x formato familiar docena media".split(" "));
 // Sinónimos y raíces para que "espaguetis", "spaghetti" o "macarrones" se reconozcan como lo mismo
 const SYN={espagueti:"spaghetti",espaguetis:"spaghetti",spaguetti:"spaghetti",tallarine:"tallarin",cocacola:"cola",yoghourt:"yogur",yogurt:"yogur",iogurt:"yogur",
   sifon:"soda",garbanzo:"garbanzo",judia:"alubia",habichuela:"alubia",frijol:"alubia",fideua:"fideo",zero:"0",cero:"0",light:"0",
@@ -735,7 +736,7 @@ function renderProduct(cur){
   const eqs=DATA_CHAINS().filter(c=>c!==p.chain).map(c=>({c,m:candidates(p,c,1)[0]?.p})).filter(x=>x.m).map(x=>({...x,cost:eqCost(p,x.m)})).sort((a,b)=>a.cost-b.cost);
   const cheapest=eqs.length&&eqs[0].cost<p.price-0.005?eqs[0]:null;
   $("#prBody").innerHTML=`<div class="card">${p.img?`<img class="hero-img" src="${esc(p.img)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:""}
-    <div class="row between"><div><span class="chip"><span class="dot" style="background:${chainColor(p.chain)}"></span>${CHAINS[p.chain].name}</span> <span class="muted small">${esc(p.size||"")}</span>${p.prev?' <span class="chip pink">Rebajado</span>':""}</div>
+    <div class="row between"><div><span class="chip"><span class="dot" style="background:${chainColor(p.chain)}"></span>${CHAINS[p.chain].name}</span> <span class="muted small">${esc(p.size||"")}</span>${p.prev?' <span class="chip pink">Rebajado</span>':""}${p.note?` <span class="chip">${esc(p.note)}</span>`:""}</div>
     <div class="price" style="font-size:28px">${p.prev?`<s>${eur(p.prev)}</s>`:""}${eur(p.price)}<div class="small muted" style="font-weight:600">${refTxt(p)}</div></div></div>
     ${cheapest?`<p class="small" style="color:var(--green);font-weight:700">En ${CHAINS[cheapest.c].name} te sale ${eur(p.price-cheapest.cost)} más barato.</p>`:eqs.length?`<p class="small" style="color:var(--green);font-weight:700">Es la opción más barata.</p>`:""}
     <button type="button" class="btn block" id="prAdd"><svg><use href="#i-plus"/></svg>Añadir a mi lista</button></div>

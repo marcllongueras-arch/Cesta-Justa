@@ -39,7 +39,7 @@ jobs:
           npm install --no-save playwright@1.47.2
           npx playwright install --with-deps chromium
 
-      - name: Descargar precios (Mercadona, Consum y Ahorramás)
+      - name: Descargar precios (Mercadona, Consum, Ahorramás y Lidl)
         env:
           ONLY: ${{ github.event.inputs.solo }}
           CP: ${{ vars.CODIGO_POSTAL }}   # opcional: Settings → Secrets and variables → Actions → Variables

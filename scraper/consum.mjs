@@ -54,7 +54,7 @@ export async function scrapeConsum() {
         brand: pd.brand?.name || "",
         desc: pd.description || "",
         cat, sub,
-        img: pd.imageURL || "",
+        img: (p.media || []).find(m => m.type === "P")?.url || (p.media || [])[0]?.url || pd.imageURL || "",   // la foto "principal" da 404; las de la galería funcionan
         price: best.v,
         prev: best.v < base.v ? base.v : null,
         refPrice: best.u ?? null,
