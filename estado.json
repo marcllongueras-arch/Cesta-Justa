@@ -1,131 +1,23 @@
 {
- "updated": "2026-10-10T09:35:51.151Z",
+ "updated": "2026-10-10T09:42:26.340Z",
  "estado": {
-  "alcampo": {
-   "ok": false,
-   "error": "alcampo: solo 50 productos",
-   "debug": {
-    "samples": [
-     {
-      "url": "https://www.compraonline.alcampo.es/categories/frescos/OC2112",
-      "ok": true,
-      "products": 50
-     },
-     {
-      "url": "https://www.compraonline.alcampo.es/categories/pasteleria/OC1282",
-      "ok": false,
-      "products": 0
-     },
-     {
-      "url": "https://www.compraonline.alcampo.es/categories/panaderia/OC1281",
-      "ok": false,
-      "products": 0
-     },
-     {
-      "url": "https://www.compraonline.alcampo.es/categories/quesos/OCQuesos",
-      "ok": false,
-      "products": 0
-     },
-     {
-      "url": "https://www.compraonline.alcampo.es/categories/jamones-y-paletas/OC151001",
-      "ok": false,
-      "products": 0
-     },
-     {
-      "url": "https://www.compraonline.alcampo.es/categories/charcuteria/OC15",
-      "ok": false,
-      "products": 0
-     },
-     {
-      "url": "https://www.compraonline.alcampo.es/categories/ahumados-surimis-anchoas-pulpos-y-otros/OC184",
-      "ok": false,
-      "products": 0
-     },
-     {
-      "url": "https://www.compraonline.alcampo.es/categories/pescados-mariscos-y-moluscos/OC14",
-      "ok": false,
-      "products": 0
-     }
-    ],
-    "rootCats": [
-     "https://www.compraonline.alcampo.es/categories/frescos/OC2112",
-     "https://www.compraonline.alcampo.es/categories/pasteleria/OC1282",
-     "https://www.compraonline.alcampo.es/categories/panaderia/OC1281",
-     "https://www.compraonline.alcampo.es/categories/quesos/OCQuesos",
-     "https://www.compraonline.alcampo.es/categories/jamones-y-paletas/OC151001",
-     "https://www.compraonline.alcampo.es/categories/charcuteria/OC15",
-     "https://www.compraonline.alcampo.es/categories/ahumados-surimis-anchoas-pulpos-y-otros/OC184",
-     "https://www.compraonline.alcampo.es/categories/pescados-mariscos-y-moluscos/OC14"
-    ],
-    "lastError": "page.waitForFunction: Timeout 30000ms exceeded.",
-    "pages": 20,
-    "cats": 325,
-    "full": 1,
-    "left": 305
-   }
+  "mercadona": {
+   "ok": true,
+   "products": 4320,
+   "seconds": 92,
+   "debug": null
   },
-  "bonpreu": {
-   "ok": false,
-   "error": "bonpreu: solo 0 productos",
-   "debug": {
-    "samples": [
-     {
-      "url": "https://www.compraonline.bonpreuesclat.cat/categories/frescos/c95cfbf2-501d-433f-bae3-10fcef330b11",
-      "ok": false,
-      "products": 0
-     },
-     {
-      "url": "https://www.compraonline.bonpreuesclat.cat/categories/capricis-per-al-paladar/c5e8ae6e-f612-4d35-a37e-89086464ea4f",
-      "ok": false,
-      "products": 0
-     },
-     {
-      "url": "https://www.compraonline.bonpreuesclat.cat/categories/pizzes-i-focaccies/7e7b141b-028b-455d-a1b3-9635c344e060",
-      "ok": false,
-      "products": 0
-     },
-     {
-      "url": "https://www.compraonline.bonpreuesclat.cat/categories/plats-preparats/c6a55f73-81e5-413b-bf7e-3f91f0949d92",
-      "ok": false,
-      "products": 0
-     },
-     {
-      "url": "https://www.compraonline.bonpreuesclat.cat/categories/taulells/c1437d18-c163-45ad-a8c2-da508de1fe6a",
-      "ok": false,
-      "products": 0
-     },
-     {
-      "url": "https://www.compraonline.bonpreuesclat.cat/categories/fleca/4341057a-8dc9-4ce0-984a-7d13594d65d4",
-      "ok": false,
-      "products": 0
-     },
-     {
-      "url": "https://www.compraonline.bonpreuesclat.cat/categories/peixateria/cfca08f2-5d86-4bab-bb4a-ba80cd5de82e",
-      "ok": false,
-      "products": 0
-     },
-     {
-      "url": "https://www.compraonline.bonpreuesclat.cat/categories/carnisseria/a2000feb-ce05-4c45-a967-3640a1f63a6b",
-      "ok": false,
-      "products": 0
-     }
-    ],
-    "rootCats": [
-     "https://www.compraonline.bonpreuesclat.cat/categories/frescos/c95cfbf2-501d-433f-bae3-10fcef330b11",
-     "https://www.compraonline.bonpreuesclat.cat/categories/capricis-per-al-paladar/c5e8ae6e-f612-4d35-a37e-89086464ea4f",
-     "https://www.compraonline.bonpreuesclat.cat/categories/pizzes-i-focaccies/7e7b141b-028b-455d-a1b3-9635c344e060",
-     "https://www.compraonline.bonpreuesclat.cat/categories/plats-preparats/c6a55f73-81e5-413b-bf7e-3f91f0949d92",
-     "https://www.compraonline.bonpreuesclat.cat/categories/taulells/c1437d18-c163-45ad-a8c2-da508de1fe6a",
-     "https://www.compraonline.bonpreuesclat.cat/categories/fleca/4341057a-8dc9-4ce0-984a-7d13594d65d4",
-     "https://www.compraonline.bonpreuesclat.cat/categories/peixateria/cfca08f2-5d86-4bab-bb4a-ba80cd5de82e",
-     "https://www.compraonline.bonpreuesclat.cat/categories/carnisseria/a2000feb-ce05-4c45-a967-3640a1f63a6b"
-    ],
-    "lastError": "page.waitForFunction: Timeout 30000ms exceeded.",
-    "pages": 19,
-    "cats": 142,
-    "full": 0,
-    "left": 123
-   }
+  "consum": {
+   "ok": true,
+   "products": 9179,
+   "seconds": 55,
+   "debug": null
+  },
+  "ahorramas": {
+   "ok": true,
+   "products": 2279,
+   "seconds": 193,
+   "debug": null
   }
  }
 }
