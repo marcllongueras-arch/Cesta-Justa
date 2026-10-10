@@ -6,7 +6,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function getJSON(url, tries = 3) {
   for (let i = 1; i <= tries; i++) {
     try {
-      const r = await fetch(url, { headers: HEADERS });
+      const r = await fetch(url, { headers: HEADERS, signal: AbortSignal.timeout(25000) });
       if (r.ok) return await r.json();
       console.warn(`Consum HTTP ${r.status} (intento ${i}) ${url}`);
     } catch (e) { console.warn(`Consum red (intento ${i}): ${e.message}`); }

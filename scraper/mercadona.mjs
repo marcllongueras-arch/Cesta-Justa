@@ -8,7 +8,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function getJSON(url, tries = 3) {
   for (let i = 1; i <= tries; i++) {
     try {
-      const r = await fetch(url, { headers: HEADERS });
+      const r = await fetch(url, { headers: HEADERS, signal: AbortSignal.timeout(25000) });
       if (r.ok) return await r.json();
       if (r.status === 404) return null;
       console.warn(`HTTP ${r.status} en ${url} (intento ${i})`);
@@ -22,7 +22,7 @@ async function getJSON(url, tries = 3) {
 async function warehouseForCP(cp) {
   try {
     const r = await fetch(`${BASE}/postal-codes/actions/change-pc/`, {
-      method: "PUT",
+      method: "PUT", signal: AbortSignal.timeout(20000),
       headers: { ...HEADERS, "Content-Type": "application/json" },
       body: JSON.stringify({ new_postal_code: cp })
     });

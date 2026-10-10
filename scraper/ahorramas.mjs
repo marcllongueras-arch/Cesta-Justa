@@ -8,7 +8,7 @@ const ent = s => String(s || "").replace(/&aacute;/g, "á").replace(/&eacute;/g,
 async function getHTML(url) {
   for (let i = 1; i <= 3; i++) {
     try {
-      const r = await fetch(url, { headers: { "User-Agent": UA, "Accept": "text/html", "Accept-Language": "es-ES" } });
+      const r = await fetch(url, { headers: { "User-Agent": UA, "Accept": "text/html", "Accept-Language": "es-ES" }, signal: AbortSignal.timeout(25000) });
       if (r.ok) return await r.text();
       if (r.status === 404) return "";
     } catch {}

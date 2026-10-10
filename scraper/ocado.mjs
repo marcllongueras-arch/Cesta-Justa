@@ -9,7 +9,7 @@ const PROMO = /folleto|promoci|oferta|novedad|black friday|campa/i;
 async function getState(url, lang) {
   for (let i = 1; i <= 3; i++) {
     try {
-      const r = await fetch(url, { headers: { "User-Agent": UA, "Accept": "text/html", "Accept-Language": lang } });
+      const r = await fetch(url, { headers: { "User-Agent": UA, "Accept": "text/html", "Accept-Language": lang }, signal: AbortSignal.timeout(25000) });
       if (r.ok) {
         const html = await r.text();
         const m = html.match(/window\.__INITIAL_STATE__\s*=\s*(\{[\s\S]*?\})\s*<\/script>/);

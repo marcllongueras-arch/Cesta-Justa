@@ -23,7 +23,8 @@ for (const [name, fn] of Object.entries(SOURCES)) {
   }
   try {
     const t = Date.now();
-    const r = await fn();
+    const LIMIT = 25 * 60 * 1000;   // ninguna cadena puede bloquear el resto
+    const r = await Promise.race([fn(), new Promise((_, ko) => setTimeout(() => ko(new Error(`tardó más de ${LIMIT / 60000} min`)), LIMIT).unref())]);
     chains[name] = { ...r.meta, updated: today };
     products.push(...r.products.map(normalize));
     ok++;
