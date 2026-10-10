@@ -1,5 +1,5 @@
 // Service worker de Cesta Justa: guarda la app para abrirla sin conexión.
-const CACHE = "cesta-justa-v5";
+const CACHE = "cesta-justa-v6";
 const SHELL = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", e => {
