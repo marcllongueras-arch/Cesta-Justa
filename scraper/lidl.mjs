@@ -22,6 +22,7 @@ function toProduct(it) {
   const cat = String(d.category || "");
   const top = cat.replace(/^Categorías\//, "").split("/")[0];
   if (NONFOOD.test(cat) || !KEEP.test(top)) return null;
+  if (/[»«]/.test(d.fullTitle || "") || /planta|maceta|tensi[oó]metro|afeitadora|rizador|secador|cepillo el[eé]ctrico/i.test(d.fullTitle || "")) return null;   // aparatos y plantas
   const plus = d.lidlPlus?.[0]?.price;
   const price = Number(d.price?.price) || Number(plus?.price) || 0;
   if (!price) return null;
