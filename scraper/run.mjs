@@ -3,9 +3,11 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { scrapeMercadona } from "./mercadona.mjs";
 import { scrapeConsum } from "./consum.mjs";
+import { scrapeAlcampo, scrapeBonpreu } from "./ocado.mjs";
+import { scrapeAhorramas } from "./ahorramas.mjs";
 import { normalize } from "./normalize.mjs";
 
-const SOURCES = { mercadona: scrapeMercadona, consum: scrapeConsum };
+const SOURCES = { mercadona: scrapeMercadona, consum: scrapeConsum, ahorramas: scrapeAhorramas, alcampo: scrapeAlcampo, bonpreu: scrapeBonpreu };
 const only = (process.env.ONLY || "").split(",").filter(Boolean);
 
 let prev = { chains: {}, products: [] };

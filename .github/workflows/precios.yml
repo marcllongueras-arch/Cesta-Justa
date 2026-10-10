@@ -19,7 +19,7 @@ concurrency:
 jobs:
   precios:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
 
@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Descargar precios (Mercadona y Consum)
+      - name: Descargar precios de todas las cadenas
         env:
           CP: ${{ vars.CODIGO_POSTAL }}   # opcional: Settings → Secrets and variables → Actions → Variables
         run: node scraper/run.mjs
