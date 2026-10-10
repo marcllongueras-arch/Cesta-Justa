@@ -2,6 +2,8 @@
 // Nos quedamos con alimentación, droguería y similares (los de bazar llevan categoría "Categorías/Hogar…", "Bricolaje"…).
 const B = "https://www.lidl.es/q/api/search";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+// Solo alimentación, frescos, bebidas y droguería; fuera bricolaje, muebles, juguetes, multimedia…
+const KEEP = /^(Food|F\+V|P\+F|Alimentaci|Fruta|Salud y cuidados|El mundo del vino|Bebidas|Droguer|Frescos|Panader|Carne|Pescado|Congelad|L[aá]cteos|Despensa)/i;
 const NONFOOD = /^Categorías\/(Hogar|Bricolaje|Jardín|Deporte|Moda|Bebé|Juguetes|Electr|Ocio|Cocina|Tecnolog|Herramient|Mascotas\/Accesorios|Decoraci)/i;
 
 async function page(offset) {
@@ -18,7 +20,8 @@ async function page(offset) {
 function toProduct(it) {
   const d = it.gridbox?.data; if (!d) return null;
   const cat = String(d.category || "");
-  if (NONFOOD.test(cat)) return null;
+  const top = cat.replace(/^Categorías\//, "").split("/")[0];
+  if (NONFOOD.test(cat) || !KEEP.test(top)) return null;
   const plus = d.lidlPlus?.[0]?.price;
   const price = Number(d.price?.price) || Number(plus?.price) || 0;
   if (!price) return null;
