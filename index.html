@@ -118,6 +118,19 @@ video{width:100%;border-radius:20px;background:#000;aspect-ratio:4/3;object-fit:
 .suggest button{display:flex;gap:10px;align-items:center;text-align:left;background:transparent;color:var(--ink);border:0;border-bottom:1px solid var(--line);padding:10px 12px;font:600 14px var(--f);cursor:pointer}
 .suggest button:last-child{border-bottom:0}
 .note{font-size:13px;color:var(--muted);line-height:1.5}
+.btn2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+textarea{font:500 15px var(--f);color:var(--ink);background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:16px;padding:13px 16px;width:100%;min-height:120px;resize:vertical}
+.ocr-row{display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}
+.ocr-row:last-child{border-bottom:0}
+.ocr-row.off{opacity:.45}
+.ocr-row input[type=text]{padding:7px 10px;font-size:13px;border-radius:10px;color:var(--muted)}
+.ocr-row select{padding:7px 10px;font-size:13px;border-radius:10px;margin-top:6px}
+.check{appearance:none;-webkit-appearance:none;width:24px;height:24px;border-radius:8px;border:1.5px solid var(--line);flex:none;margin-top:12px;display:grid;place-items:center;cursor:pointer;padding:0}
+.check:checked{background:var(--grad-round);border-color:transparent}
+.check:checked::after{content:"";width:10px;height:6px;border:2.5px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg) translate(1px,-1px)}
+.progress{height:8px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}
+.progress>i{display:block;height:100%;width:0;background:var(--grad);transition:width .2s}
+.preview{width:100%;max-height:220px;object-fit:contain;border-radius:16px;background:rgba(255,255,255,.03)}
 a{color:var(--pink)}
 .empty-state{color:var(--muted);text-align:center;padding:10px 6px}
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:rgba(11,13,26,.92);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr 96px 1fr 1fr;align-items:end;padding:8px 6px calc(10px + env(safe-area-inset-bottom,0px))}
@@ -183,6 +196,30 @@ nav.tabs .fab svg{width:30px;height:30px}
     <input id="lSearch" type="search" placeholder="Añadir: leche, huevos, aceite…" autocomplete="off">
     <div class="suggest" id="lSuggest" hidden></div>
     <ul class="list" id="lList"></ul>
+  </div>
+
+  <div class="card hero" id="ocrCard">
+    <div class="eyebrow">Sube tu lista</div>
+    <p class="muted small">Haz una foto a tu lista escrita o al ticket y la app intentará adivinar cada producto. Tú confirmas antes de añadir.</p>
+    <div class="btn2">
+      <label class="btn" for="ocrFile" style="padding:14px 12px"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Foto</label>
+      <button type="button" class="btn ghost" id="ocrPasteBtn" style="padding:14px 12px"><svg viewBox="0 0 24 24"><path d="M9 4h6v3H9zM7 5H5v15h14V5h-2"/></svg>Escribir</button>
+    </div>
+    <input type="file" id="ocrFile" accept="image/*" hidden>
+    <div id="ocrPaste" hidden style="display:flex;flex-direction:column;gap:10px">
+      <textarea id="ocrText" placeholder="Una cosa por línea o separadas por comas:&#10;2 leche entera&#10;huevos&#10;aceite de oliva, atún, tomate frito"></textarea>
+      <button type="button" class="btn block" id="ocrTextGo">Adivinar productos</button>
+    </div>
+    <div id="ocrWork" hidden style="display:flex;flex-direction:column;gap:10px">
+      <img id="ocrImg" class="preview" alt="Foto de la lista">
+      <div class="progress"><i id="ocrBar"></i></div>
+      <p class="small muted" id="ocrMsg">Leyendo la foto…</p>
+    </div>
+    <div id="ocrReview" hidden style="display:flex;flex-direction:column;gap:6px">
+      <div id="ocrRows"></div>
+      <button type="button" class="btn block" id="ocrAdd">Añadir a mi lista</button>
+      <button type="button" class="btn ghost block" id="ocrCancel">Descartar</button>
+    </div>
   </div>
 
   <div class="label">Dónde sale más barata</div>
@@ -469,6 +506,99 @@ $("#cmpRegister").addEventListener("click",()=>{const b=lastRows[0];if(!b){toast
   const worst=lastRows.filter(r=>r.missing.length===b.missing.length).slice(-1)[0];
   S.purchases.push({id:Date.now().toString(36),store:b.c,amount:Math.round(b.total*100)/100,date:new Date().toISOString(),note:"lista habitual",saved:Math.max(0,Math.round(((worst?.total||b.total)-b.total)*100)/100)});
   save("purchases");renderBudget();toast(`Registrado: ${eur(b.total)} en ${CHAINS[b.c].name}`)});
+
+/* ================= LISTA DESDE FOTO O TEXTO ================= */
+// Lee el texto con Tesseract.js (en el propio móvil) y adivina el producto de cada línea.
+const OCR_STOP=new Set("de del la el los las y con sin en para un una unos unas comprar compra lista mas tambien".split(" "));
+const ocrMem=()=>store.get("ocrMem",{});
+function cleanLine(raw){
+  let t=raw.replace(/[•·*▪►\-–—_~|\[\]\(\)☐☑✓✔]+/g," ").replace(/^\s*\d+[.)]\s+/,"").replace(/\s+/g," ").trim();
+  let q=1; let m;
+  if((m=t.match(/^(\d{1,2})\s*(?:x|uds?|u\b|unidades|paquetes?|botes?|latas?|bricks?|botellas?)?\s+(?=[a-záéíóúñ])/i))){q=+m[1];t=t.slice(m[0].length)}
+  else if((m=t.match(/\s*(?:x\s*(\d{1,2})|(\d{1,2})\s*x)\s*$/i))){q=+(m[1]||m[2]);t=t.slice(0,m.index)}
+  t=t.replace(/[^a-záéíóúüñ0-9 ,.]/gi," ").replace(/\s+/g," ").trim();
+  return {text:t,q:Math.min(Math.max(q,1),20)};
+}
+function splitLines(txt){
+  return txt.split(/\n|,|;/).map(cleanLine).filter(x=>(x.text.match(/[a-záéíóúñ]/gi)||[]).length>=3);
+}
+const stem=w=>w.length>4&&w.endsWith("es")&&!/[aeiou]es$/.test(w)?w.slice(0,-2):w.length>3&&w.endsWith("s")?w.slice(0,-1):w;
+function guessProducts(text, limit=6){
+  const mem=ocrMem()[norm(text)];
+  const words=[...new Set(norm(text).split(/[^a-z0-9ñ]+/).filter(w=>w.length>1&&!OCR_STOP.has(w)&&!/^\d+$/.test(w)).map(stem))];
+  if(!words.length) return [];
+  const res=[];
+  for(const p of PRODUCTS){
+    const toks=p._s||(p._s=p._t.map(stem));
+    let sc=0,used=new Set();
+    for(const w of words){
+      let i=toks.indexOf(w);
+      if(i>=0){sc+=1;used.add(i);continue}
+      if(w.length>=4){i=toks.findIndex(t=>t.startsWith(w)||(w.length>=6&&w.startsWith(t)&&t.length>=5));if(i>=0){sc+=0.8;used.add(i);continue}}
+      if(p._n.includes(w)) sc+=0.4;
+    }
+    if(sc<words.length*0.75) continue;
+    const extra=toks.length-used.size;
+    res.push({p,sc:sc/words.length-0.07*extra+(toks[0]===words[0]?0.1:0)});
+  }
+  res.sort((a,b)=>b.sc-a.sc||((a.p.unitPrice??a.p.price)-(b.p.unitPrice??b.p.price)));
+  // entre los casi empatados, el de mejor precio por kg/L
+  const top=res[0]?.sc??0, tier=res.filter(r=>r.sc>=top-0.05).sort((a,b)=>(a.p.unitPrice??a.p.price)-(b.p.unitPrice??b.p.price));
+  let out=tier.concat(res.filter(r=>r.sc<top-0.05)).slice(0,limit).map(r=>r.p);
+  if(mem&&BY_ID.has(mem)) out=[BY_ID.get(mem),...out.filter(p=>p.id!==mem)];
+  return out;
+}
+let ocrItems=[];
+function showOcr(part){["ocrPaste","ocrWork","ocrReview"].forEach(id=>$("#"+id).hidden=id!==part)}
+function renderOcrReview(){
+  $("#ocrRows").innerHTML=ocrItems.length?ocrItems.map((it,i)=>{const p=it.opts.find(o=>o.id===it.pick);
+    return `<div class="ocr-row ${it.on?"":"off"}"><input type="checkbox" class="check" data-i="${i}" ${it.on?"checked":""} aria-label="Incluir">
+      ${thumb(p,48)}<div class="grow"><input type="text" value="${esc(it.text)}" data-retext="${i}" aria-label="Texto leído">
+      ${p?`<div class="small" style="font-weight:700;margin-top:8px;line-height:1.3">${esc(p.name)}</div><div class="small muted"><span class="dot" style="background:${chainColor(p.chain)}"></span> ${CHAINS[p.chain].name} · ${esc(p.size||"")} · <b style="color:var(--ink)">${eur(p.price)}</b></div>`:""}
+      ${it.opts.length?`<select data-pick="${i}" aria-label="Cambiar producto">${it.opts.map(o=>`<option value="${o.id}" ${o.id===it.pick?"selected":""}>${esc(o.name)} · ${esc(o.size||"")} · ${CHAINS[o.chain].name} · ${eur(o.price)}</option>`).join("")}</select>`:`<p class="small" style="color:var(--amber);margin-top:6px">No lo encuentro. Corrige el texto.</p>`}</div>
+      <div class="qty" style="margin-top:8px"><button type="button" data-qd="${i}" aria-label="Menos">−</button><span>${it.q}</span><button type="button" data-qi="${i}" aria-label="Más">+</button></div></div>`}).join("")
+    :`<p class="empty-state">No he podido leer ningún producto. Prueba con más luz o escríbelo.</p>`;
+  const n=ocrItems.filter(it=>it.on&&it.pick).length;
+  $("#ocrAdd").textContent=n?`Añadir ${n} producto${n>1?"s":""} a mi lista`:"Nada que añadir"; $("#ocrAdd").disabled=!n;
+}
+function buildReview(text){
+  if(!LOADED){toast("Espera a que carguen los precios");return}
+  ocrItems=splitLines(text).map(l=>{const opts=guessProducts(l.text);return {text:l.text,q:l.q,opts,pick:opts[0]?.id||null,on:!!opts.length}});
+  showOcr("ocrReview"); renderOcrReview();
+}
+$("#ocrPasteBtn").addEventListener("click",()=>{showOcr($("#ocrPaste").hidden?"ocrPaste":"");});
+$("#ocrTextGo").addEventListener("click",()=>{const t=$("#ocrText").value.trim();if(!t){toast("Escribe algún producto");return}buildReview(t)});
+$("#ocrCancel").addEventListener("click",()=>{ocrItems=[];showOcr("")});
+$("#ocrRows").addEventListener("click",e=>{const t=e.target;
+  if(t.dataset.i!==undefined&&t.type==="checkbox"){ocrItems[+t.dataset.i].on=t.checked;renderOcrReview()}
+  if(t.dataset.qi!==undefined){ocrItems[+t.dataset.qi].q++;renderOcrReview()}
+  if(t.dataset.qd!==undefined){const it=ocrItems[+t.dataset.qd];it.q=Math.max(1,it.q-1);renderOcrReview()}});
+$("#ocrRows").addEventListener("change",e=>{const t=e.target;
+  if(t.dataset.pick!==undefined){ocrItems[+t.dataset.pick].pick=t.value;renderOcrReview()}
+  if(t.dataset.retext!==undefined){const it=ocrItems[+t.dataset.retext];it.text=t.value;it.opts=guessProducts(t.value);it.pick=it.opts[0]?.id||null;it.on=!!it.pick;renderOcrReview()}});
+$("#ocrAdd").addEventListener("click",()=>{const mem=ocrMem();let n=0;
+  for(const it of ocrItems){if(!it.on||!it.pick)continue;mem[norm(it.text)]=it.pick;
+    const ex=S.list.find(i=>i.id===it.pick);ex?ex.q+=it.q:S.list.push({id:it.pick,q:it.q});n++}
+  store.set("ocrMem",mem);save("list");ocrItems=[];showOcr("");$("#ocrText").value="";renderList();renderCompare();toast(`${n} productos añadidos`)});
+// Prepara la foto (tamaño y contraste) para que el texto se lea mejor
+function prepImage(file){return new Promise((ok,ko)=>{const img=new Image();img.onload=()=>{
+  const max=1800,sc=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement("canvas");c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);
+  const g=c.getContext("2d");g.drawImage(img,0,0,c.width,c.height);const d=g.getImageData(0,0,c.width,c.height),a=d.data;
+  for(let i=0;i<a.length;i+=4){let v=0.299*a[i]+0.587*a[i+1]+0.114*a[i+2];v=Math.max(0,Math.min(255,(v-128)*1.5+140));a[i]=a[i+1]=a[i+2]=v}
+  g.putImageData(d,0,0);c.toBlob(ok,"image/jpeg",0.9)};img.onerror=ko;img.src=URL.createObjectURL(file)})}
+let ocrWorker=null;
+$("#ocrFile").addEventListener("change",async e=>{
+  const f=e.target.files[0];e.target.value="";if(!f)return;
+  showOcr("ocrWork");$("#ocrImg").src=URL.createObjectURL(f);$("#ocrBar").style.width="3%";$("#ocrMsg").textContent="Preparando el lector de texto (la primera vez tarda un poco)…";
+  try{
+    if(!window.Tesseract) await loadScript("https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js");
+    if(!ocrWorker) ocrWorker=await Tesseract.createWorker("spa",1,{logger:m=>{if(m.status==="recognizing text"){$("#ocrBar").style.width=Math.round(10+m.progress*90)+"%";$("#ocrMsg").textContent="Leyendo la lista…"}else if(/load/.test(m.status)){$("#ocrBar").style.width=Math.round(3+(m.progress||0)*7)+"%"}}});
+    const blob=await prepImage(f);
+    const {data}=await ocrWorker.recognize(blob);
+    $("#ocrText").value=data.text.trim();
+    buildReview(data.text);
+  }catch(err){showOcr("ocrPaste");toast("No se pudo leer la foto. Escríbela o prueba otra vez");}
+});
 
 /* ================= COMPARAR ================= */
 function fillFilters(){
