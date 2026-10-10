@@ -1,0 +1,106 @@
+{
+ "updated": "2026-10-10T08:46:31.938Z",
+ "estado": {
+  "bonpreu": {
+   "ok": false,
+   "error": "bonpreu: solo 0 productos",
+   "debug": {
+    "samples": [
+     {
+      "url": "https://www.compraonline.bonpreuesclat.cat/categories/frescos/03",
+      "ok": false,
+      "products": 0,
+      "cats": 0
+     },
+     {
+      "url": "https://www.compraonline.bonpreuesclat.cat/categories/capricis-per-al-paladar/0311",
+      "ok": false,
+      "products": 0,
+      "cats": 0
+     },
+     {
+      "url": "https://www.compraonline.bonpreuesclat.cat/categories/pizzes-i-focaccies/0308",
+      "ok": false,
+      "products": 0,
+      "cats": 0
+     },
+     {
+      "url": "https://www.compraonline.bonpreuesclat.cat/categories/plats-preparats/0306",
+      "ok": false,
+      "products": 0,
+      "cats": 0
+     },
+     {
+      "url": "https://www.compraonline.bonpreuesclat.cat/categories/taulells/0310",
+      "ok": false,
+      "products": 0,
+      "cats": 0
+     },
+     {
+      "url": "https://www.compraonline.bonpreuesclat.cat/categories/fleca/0307",
+      "ok": false,
+      "products": 0,
+      "cats": 0
+     },
+     {
+      "url": "https://www.compraonline.bonpreuesclat.cat/categories/peixateria/0305",
+      "ok": false,
+      "products": 0,
+      "cats": 0
+     },
+     {
+      "url": "https://www.compraonline.bonpreuesclat.cat/categories/carnisseria/0304",
+      "ok": false,
+      "products": 0,
+      "cats": 0
+     },
+     {
+      "url": "https://www.compraonline.bonpreuesclat.cat/categories/formatges/0303",
+      "ok": false,
+      "products": 0,
+      "cats": 0
+     },
+     {
+      "url": "https://www.compraonline.bonpreuesclat.cat/categories/xarcuteria/0302",
+      "ok": false,
+      "products": 0,
+      "cats": 0
+     },
+     {
+      "url": "https://www.compraonline.bonpreuesclat.cat/categories/fruites-i-verdures/0301",
+      "ok": false,
+      "products": 0,
+      "cats": 0
+     },
+     {
+      "url": "https://www.compraonline.bonpreuesclat.cat/categories/alimentacio/01",
+      "ok": false,
+      "products": 0,
+      "cats": 0
+     }
+    ],
+    "rootCats": [
+     "https://www.compraonline.bonpreuesclat.cat/categories/frescos/03",
+     "https://www.compraonline.bonpreuesclat.cat/categories/capricis-per-al-paladar/0311",
+     "https://www.compraonline.bonpreuesclat.cat/categories/pizzes-i-focaccies/0308",
+     "https://www.compraonline.bonpreuesclat.cat/categories/plats-preparats/0306",
+     "https://www.compraonline.bonpreuesclat.cat/categories/taulells/0310",
+     "https://www.compraonline.bonpreuesclat.cat/categories/fleca/0307",
+     "https://www.compraonline.bonpreuesclat.cat/categories/peixateria/0305",
+     "https://www.compraonline.bonpreuesclat.cat/categories/carnisseria/0304",
+     "https://www.compraonline.bonpreuesclat.cat/categories/formatges/0303",
+     "https://www.compraonline.bonpreuesclat.cat/categories/xarcuteria/0302",
+     "https://www.compraonline.bonpreuesclat.cat/categories/fruites-i-verdures/0301",
+     "https://www.compraonline.bonpreuesclat.cat/categories/alimentacio/01",
+     "https://www.compraonline.bonpreuesclat.cat/categories/el-raco-dolc/0116",
+     "https://www.compraonline.bonpreuesclat.cat/categories/nutricio-i-benestar/0115",
+     "https://www.compraonline.bonpreuesclat.cat/categories/rebosteria/0113"
+    ],
+    "pages": 132,
+    "cats": 158,
+    "full": 0,
+    "left": 26
+   }
+  }
+ }
+}
