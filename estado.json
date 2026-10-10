@@ -1,22 +1,22 @@
 {
- "updated": "2026-10-10T09:42:26.340Z",
+ "updated": "2026-10-10T11:15:14.922Z",
  "estado": {
   "mercadona": {
    "ok": true,
    "products": 4320,
-   "seconds": 92,
+   "seconds": 71,
    "debug": null
   },
   "consum": {
    "ok": true,
    "products": 9179,
-   "seconds": 55,
+   "seconds": 60,
    "debug": null
   },
   "ahorramas": {
    "ok": true,
    "products": 2279,
-   "seconds": 193,
+   "seconds": 182,
    "debug": null
   }
  }
