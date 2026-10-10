@@ -13,10 +13,14 @@ const only = (process.env.ONLY || "").split(",").filter(Boolean);
 let prev = { chains: {}, products: [] };
 try { prev = JSON.parse(await readFile("precios.json", "utf8")); } catch {}
 const today = new Date().toISOString().slice(0, 10);
-const chains = {}; let products = []; let ok = 0;
+const chains = {}; let products = []; let ok = 0; const estado = {};
 
 for (const [name, fn] of Object.entries(SOURCES)) {
-  if (only.length && !only.includes(name)) continue;
+  if (only.length && !only.includes(name)) {   // cadena no pedida: se conservan sus datos
+    const old = (prev.products || []).filter(p => p.chain === name);
+    if (old.length) { chains[name] = prev.chains?.[name] || { products: old.length }; products.push(...old); }
+    continue;
+  }
   try {
     const t = Date.now();
     const r = await fn();
@@ -24,8 +28,10 @@ for (const [name, fn] of Object.entries(SOURCES)) {
     products.push(...r.products.map(normalize));
     ok++;
     console.log(`${name}: ${r.products.length} productos en ${Math.round((Date.now() - t) / 1000)} s`);
+    estado[name] = { ok: true, products: r.products.length, seconds: Math.round((Date.now() - t) / 1000), debug: r.debug || null };
   } catch (e) {
     console.error(`${name}: ERROR ${e.message}. Se mantienen los datos anteriores.`);
+    estado[name] = { ok: false, error: e.message, debug: e.debug || null };
     const old = (prev.products || []).filter(p => p.chain === name);
     if (old.length) { chains[name] = prev.chains?.[name] || { products: old.length }; products.push(...old); }
   }
@@ -45,4 +51,5 @@ for (const p of products) {
 products.sort((a, b) => a.chain.localeCompare(b.chain) || a.cat.localeCompare(b.cat, "es") || a.name.localeCompare(b.name, "es"));
 await writeFile("precios.json", JSON.stringify({ version: 2, updated: today, chains, products }));
 await writeFile("historial.json", JSON.stringify(history));
+await writeFile("estado.json", JSON.stringify({ updated: new Date().toISOString(), estado }, null, 1));
 console.log(`Total: ${products.length} productos de ${Object.keys(chains).length} cadenas.`);

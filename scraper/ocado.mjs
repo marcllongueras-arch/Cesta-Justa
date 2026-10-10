@@ -60,27 +60,31 @@ export function makeOcadoScraper({ chain, base, lang = "es-ES", maxPages = 1500 
         queue.push(`${base}/categories/${slug(last)}/${c.retailerId}`);
       }
     };
+    const t0 = Date.now(), dbg = { samples: [] };
     const root = await getState(`${base}/categories`, lang);
-    if (!root) throw new Error(`${chain}: no se pudo leer la página de categorías`);
+    if (!root) { const e = new Error(`${chain}: no se pudo leer la página de categorías`); e.debug = dbg; throw e; }
     enqueue(root);
-    while (queue.length && pages < maxPages) {
+    dbg.rootCats = queue.slice(0, 15);
+    while (queue.length && pages < maxPages && Date.now() - t0 < 20 * 60 * 1000) {
       const url = queue.shift();
       const st = await getState(url, lang);
       pages++;
+      const ents = Object.values(st?.data?.products?.productEntities || {});
+      if (dbg.samples.length < 12) dbg.samples.push({ url, ok: !!st, products: ents.length, cats: Object.keys(st?.data?.categories?.categories || {}).length });
       if (!st) continue;
       enqueue(st);
-      const ents = Object.values(st.data?.products?.productEntities || {});
       if (ents.length >= 50) full++;
       for (const e of ents) {
         const p = toProduct(e, chain, base);
         if (p && !products.has(p.id)) products.set(p.id, p);
       }
-      await sleep(400);
+      await sleep(250);
     }
     const list = [...products.values()];
     console.log(`${chain}: ${pages} páginas, ${seenCat.size} categorías, ${full} páginas llenas (pueden faltar productos)`);
-    if (list.length < 300) throw new Error(`${chain}: solo ${list.length} productos`);
-    return { products: list, meta: { products: list.length, pages } };
+    Object.assign(dbg, { pages, cats: seenCat.size, full, left: queue.length });
+    if (list.length < 300) { const e = new Error(`${chain}: solo ${list.length} productos`); e.debug = dbg; throw e; }
+    return { products: list, meta: { products: list.length, pages }, debug: dbg };
   };
 }
 
