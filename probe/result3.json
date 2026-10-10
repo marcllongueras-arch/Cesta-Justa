@@ -1,0 +1,234 @@
+{
+ "alcampoState": {
+  "dataKeys": [
+   "applicableLoyalty",
+   "adverts",
+   "basket",
+   "basketMerge",
+   "cartEditInfo",
+   "basketSpeculation",
+   "checkout",
+   "checkoutTermsAndConditions",
+   "checkoutValidation",
+   "draftBasket",
+   "instantShop",
+   "categories",
+   "checkoutWalk",
+   "customer",
+   "delivery",
+   "deliveryPass",
+   "favorite",
+   "locale",
+   "orders",
+   "popupBanner",
+   "recurringOrdersSignUp",
+   "regulars",
+   "payments",
+   "visualConfig",
+   "products",
+   "shopperOptimisations",
+   "retailer",
+   "loyaltySettings",
+   "search",
+   "recipes",
+   "listerPage",
+   "toggleablePromotions",
+   "coupons",
+   "composableNavbar",
+   "experimentation",
+   "orderPayment"
+  ],
+  "found": [
+   {
+    "path": "data.products.productEntities.22322b84-385c-49a9-bc0c-4f93acf7dd3c",
+    "sample": "{\"productId\":\"22322b84-385c-49a9-bc0c-4f93acf7dd3c\",\"retailerProductId\":\"50139\",\"brand\":\"HORTALIZA\",\"available\":true,\"isVerifiedPurchase\":false,\"quantityInBasket\":0,\"maxQuantityReached\":false,\"taxCodesDisplayNames\":[],\"imageIds\":[\"a81919cf-426a-4fe7-80f1-e6208063edbd\"],\"timeRestricted\":false,\"isInCurrentCatalog\":true,\"ratingSummary\":{\"overallRating\":\"4.3\",\"count\":3},\"retailerFinancingPlanIds\":[\"022\",\"025\",\"026\",\"027\",\"016\",\"021\"],\"alcohol\":false,\"categoryPath\":[\"Folletos y Promociones\",\"Folleto Alimentación Canarias\",\"Frescos\",\"Verduras y frutas\"],\"name\":\"Cebolla tubo 1 kg\",\"price\":{\"current\":{\"amount\":\"1.29\",\"currency\":\"EUR\"},\"unit\":{\"label\":\"fop.price.per.kg\",\"current\":{\"amount\":\"1.29\",\"currency\":\"EUR\"}}},\"isInProductList\":false,\"image\":{\"src\":\"https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/a81919cf-426a-4fe7-80f1-e6208063edbd/300x300.jpg\",\"description\":\"Cebolla tubo 1 kg\",\"fopSrcset\":\"https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/a81919cf-426a-4fe7-80f1-e6208063edbd/100x100.webp 100w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/a81919cf-426a-4fe7-80f1-e6208063edbd/150x150.webp 150w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/a81919cf-426a-4fe7-80f1-e6208063edbd/200x200.webp 200w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/a81919cf-426a-4fe7-80f1-e6208063edbd/300x300.webp 300w, https:/"
+   },
+   {
+    "path": "data.products.productEntities.81a8f51a-5704-4082-aaa6-deb08e846bf6",
+    "sample": "{\"productId\":\"81a8f51a-5704-4082-aaa6-deb08e846bf6\",\"retailerProductId\":\"245807\",\"brand\":\"EL POZO\",\"available\":true,\"isVerifiedPurchase\":false,\"quantityInBasket\":0,\"maxQuantityReached\":false,\"taxCodesDisplayNames\":[],\"imageIds\":[\"a865f1ee-7035-4a48-becc-7f2e0a6381cd\",\"47eef5f1-5c7a-4dc0-8add-6341cb831f60\"],\"timeRestricted\":false,\"isInCurrentCatalog\":true,\"ratingSummary\":{\"overallRating\":\"0.0\",\"count\":0},\"retailerFinancingPlanIds\":[\"022\",\"025\",\"026\",\"027\",\"016\",\"021\"],\"alcohol\":false,\"categoryPath\":[\"Frescos\",\"Charcutería\",\"Loncheado cocido\",\"Pavo cocido\",\"Pechuga de pavo\"],\"name\":\"EL POZO 1954 Premium gourmet Pechuga de pavo asada con madera de haya cortada en lonchas 120 g.\",\"price\":{\"current\":{\"amount\":\"2.59\",\"currency\":\"EUR\"},\"unit\":{\"label\":\"fop.price.per.kg\",\"current\":{\"amount\":\"21.58\",\"currency\":\"EUR\"}}},\"isInProductList\":false,\"image\":{\"src\":\"https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/a865f1ee-7035-4a48-becc-7f2e0a6381cd/300x300.jpg\",\"description\":\"EL POZO 1954 Premium gourmet Pechuga de pavo asada con madera de haya cortada en lonchas 120 g.\",\"fopSrcset\":\"https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/a865f1ee-7035-4a48-becc-7f2e0a6381cd/100x100.webp 100w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/a865f1ee-7035-4a48-becc-7f2e0a6381cd/150x150.webp 150w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/a865f1ee-7035-4a48-"
+   },
+   {
+    "path": "data.products.productEntities.87175a35-cf6e-4028-9311-b8e9a08e7e9d",
+    "sample": "{\"productId\":\"87175a35-cf6e-4028-9311-b8e9a08e7e9d\",\"retailerProductId\":\"54960\",\"brand\":\"EL POZO\",\"available\":true,\"isVerifiedPurchase\":false,\"quantityInBasket\":0,\"maxQuantityReached\":false,\"taxCodesDisplayNames\":[],\"imageIds\":[\"182ad752-b48d-467a-84b4-f03aedf07174\"],\"timeRestricted\":false,\"isInCurrentCatalog\":true,\"ratingSummary\":{\"overallRating\":\"4.0\",\"count\":2},\"retailerFinancingPlanIds\":[\"022\",\"025\",\"026\",\"027\",\"016\",\"021\"],\"alcohol\":false,\"categoryPath\":[\"Frescos\",\"Charcutería\",\"Loncheado cocido\",\"Jamón cocido\"],\"name\":\"EL POZO 1954 Jamón cocido de categoria extra, sin lactosa, ni colorantes, cortado en lonchas 150 g.\",\"price\":{\"current\":{\"amount\":\"1.89\",\"currency\":\"EUR\"},\"unit\":{\"label\":\"fop.price.per.kg\",\"current\":{\"amount\":\"12.60\",\"currency\":\"EUR\"}}},\"isInProductList\":false,\"image\":{\"src\":\"https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/182ad752-b48d-467a-84b4-f03aedf07174/300x300.jpg\",\"description\":\"EL POZO 1954 Jamón cocido de categoria extra, sin lactosa, ni colorantes, cortado en lonchas 150 g.\",\"fopSrcset\":\"https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/182ad752-b48d-467a-84b4-f03aedf07174/100x100.webp 100w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/182ad752-b48d-467a-84b4-f03aedf07174/150x150.webp 150w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/182ad752-b48d-467a-84b4-f03aedf07174/200x200.webp 200w, https://www."
+   },
+   {
+    "path": "data.products.productEntities.f02744b3-6109-47af-bdf8-66ee443f2303",
+    "sample": "{\"productId\":\"f02744b3-6109-47af-bdf8-66ee443f2303\",\"retailerProductId\":\"55438\",\"brand\":\"HORTALIZA\",\"available\":true,\"isVerifiedPurchase\":false,\"quantityInBasket\":0,\"maxQuantityReached\":false,\"taxCodesDisplayNames\":[],\"imageIds\":[\"881e9baf-430d-445c-810d-dec355a0fa23\"],\"timeRestricted\":false,\"isInCurrentCatalog\":true,\"ratingSummary\":{\"overallRating\":\"4.0\",\"count\":1},\"retailerFinancingPlanIds\":[\"022\",\"025\",\"026\",\"027\",\"016\",\"021\"],\"alcohol\":false,\"categoryPath\":[\"Folletos y Promociones\",\"Folleto de Alimentación (excepto Canarias)\",\"Frescos\",\"Verduras y frutas\"],\"name\":\"Brócoli filmado 500 g.\",\"price\":{\"current\":{\"amount\":\"1.25\",\"currency\":\"EUR\"},\"unit\":{\"label\":\"fop.price.per.kg\",\"current\":{\"amount\":\"2.50\",\"currency\":\"EUR\"}}},\"isInProductList\":false,\"image\":{\"src\":\"https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/881e9baf-430d-445c-810d-dec355a0fa23/300x300.jpg\",\"description\":\"Brócoli filmado 500 g.\",\"fopSrcset\":\"https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/881e9baf-430d-445c-810d-dec355a0fa23/100x100.webp 100w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/881e9baf-430d-445c-810d-dec355a0fa23/150x150.webp 150w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/881e9baf-430d-445c-810d-dec355a0fa23/200x200.webp 200w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/881e9baf-430d-445c-810d-dec355a0fa23/300"
+   },
+   {
+    "path": "data.products.productEntities.35506852-961a-427e-8896-6843fffdefaf",
+    "sample": "{\"productId\":\"35506852-961a-427e-8896-6843fffdefaf\",\"retailerProductId\":\"55624\",\"brand\":\"MIS FRUTAS SELECCIONADAS\",\"available\":true,\"isVerifiedPurchase\":false,\"quantityInBasket\":0,\"maxQuantityReached\":false,\"taxCodesDisplayNames\":[],\"imageIds\":[\"e0bc1dbb-f873-4398-a309-f33e03861923\"],\"timeRestricted\":false,\"isInCurrentCatalog\":true,\"ratingSummary\":{\"overallRating\":\"4.0\",\"count\":5},\"retailerFinancingPlanIds\":[\"022\",\"025\",\"026\",\"027\",\"016\",\"021\"],\"alcohol\":false,\"categoryPath\":[\"Frescos\",\"Frutas\",\"Tropicales y Exóticas\",\"Aguacates\"],\"name\":\"Aguacates al peso.\",\"price\":{\"current\":{\"amount\":\"2.81\",\"currency\":\"EUR\"},\"unit\":{\"label\":\"fop.price.per.kg\",\"current\":{\"amount\":\"4.69\",\"currency\":\"EUR\"}}},\"isInProductList\":false,\"image\":{\"src\":\"https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/e0bc1dbb-f873-4398-a309-f33e03861923/300x300.jpg\",\"description\":\"Aguacates al peso.\",\"fopSrcset\":\"https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/e0bc1dbb-f873-4398-a309-f33e03861923/100x100.webp 100w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/e0bc1dbb-f873-4398-a309-f33e03861923/150x150.webp 150w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/e0bc1dbb-f873-4398-a309-f33e03861923/200x200.webp 200w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/e0bc1dbb-f873-4398-a309-f33e03861923/300x300.webp 300w, https://www.compraonli"
+   },
+   {
+    "path": "data.products.productEntities.8193169d-73dd-4d50-a848-bcd9a72044ef",
+    "sample": "{\"productId\":\"8193169d-73dd-4d50-a848-bcd9a72044ef\",\"retailerProductId\":\"75732\",\"brand\":\"MIS VERDURAS SELECCIONADAS\",\"available\":true,\"isVerifiedPurchase\":false,\"quantityInBasket\":0,\"maxQuantityReached\":false,\"taxCodesDisplayNames\":[],\"imageIds\":[\"2a2c6305-d1f5-4d72-b839-fd9b68602ef8\"],\"timeRestricted\":false,\"isInCurrentCatalog\":true,\"ratingSummary\":{\"overallRating\":\"4.0\",\"count\":3},\"retailerFinancingPlanIds\":[\"022\",\"025\",\"026\",\"027\",\"016\",\"021\"],\"alcohol\":false,\"categoryPath\":[\"Folletos y Promociones\",\"Folleto de Alimentación (excepto Canarias)\",\"Frescos\",\"Verduras y frutas\"],\"name\":\"Batata al peso.\",\"price\":{\"current\":{\"amount\":\"1.89\",\"currency\":\"EUR\"},\"unit\":{\"label\":\"fop.price.per.kg\",\"current\":{\"amount\":\"1.89\",\"currency\":\"EUR\"}}},\"isInProductList\":false,\"image\":{\"src\":\"https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/2a2c6305-d1f5-4d72-b839-fd9b68602ef8/300x300.jpg\",\"description\":\"Batata al peso.\",\"fopSrcset\":\"https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/2a2c6305-d1f5-4d72-b839-fd9b68602ef8/100x100.webp 100w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/2a2c6305-d1f5-4d72-b839-fd9b68602ef8/150x150.webp 150w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/2a2c6305-d1f5-4d72-b839-fd9b68602ef8/200x200.webp 200w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/2a2c6305-d1f5-4d72-b839-fd9b68602ef8/"
+   },
+   {
+    "path": "data.products.productEntities.bbca48bf-1631-492a-af22-e5db028cf608",
+    "sample": "{\"productId\":\"bbca48bf-1631-492a-af22-e5db028cf608\",\"retailerProductId\":\"53007\",\"brand\":\"PRODUCTO ALCAMPO\",\"available\":true,\"isVerifiedPurchase\":false,\"quantityInBasket\":0,\"maxQuantityReached\":false,\"taxCodesDisplayNames\":[],\"imageIds\":[\"3f054933-1c7c-4349-a308-de42ba564945\"],\"timeRestricted\":false,\"isInCurrentCatalog\":true,\"ratingSummary\":{\"overallRating\":\"0.0\",\"count\":0},\"retailerFinancingPlanIds\":[\"022\",\"025\",\"026\",\"027\",\"016\",\"021\"],\"alcohol\":false,\"categoryPath\":[\"Folletos y Promociones\",\"Folleto de Alimentación (excepto Canarias)\",\"Frescos\",\"Quesos\"],\"name\":\"AUCHAN Mozzarella fresca 125 g. Producto Alcampo\",\"price\":{\"current\":{\"amount\":\"1.25\",\"currency\":\"EUR\"},\"unit\":{\"label\":\"fop.price.per.kg\",\"current\":{\"amount\":\"10.00\",\"currency\":\"EUR\"}}},\"isInProductList\":false,\"image\":{\"src\":\"https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/3f054933-1c7c-4349-a308-de42ba564945/300x300.jpg\",\"description\":\"AUCHAN Mozzarella fresca 125 g. Producto Alcampo\",\"fopSrcset\":\"https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/3f054933-1c7c-4349-a308-de42ba564945/100x100.webp 100w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/3f054933-1c7c-4349-a308-de42ba564945/150x150.webp 150w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/3f054933-1c7c-4349-a308-de42ba564945/200x200.webp 200w, https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77b"
+   }
+  ]
+ },
+ "alcampo-v6-search": {
+  "status": 400,
+  "type": "text/html;charset=UTF-8",
+  "head": "<html><body><h1>Error 400</h1></body></html>"
+ },
+ "alcampo-v6-cat": {
+  "status": 400,
+  "type": "text/html;charset=UTF-8",
+  "head": "<html><body><h1>Error 400</h1></body></html>"
+ },
+ "alcampo-v5-bop": {
+  "status": 404,
+  "type": "text/html;charset=UTF-8",
+  "head": "<html><body><h1>Error 404</h1></body></html>"
+ },
+ "alcampo-cats-v2": {
+  "status": 404,
+  "type": "text/html;charset=UTF-8",
+  "head": "<html><body><h1>Error 404</h1></body></html>"
+ },
+ "alcampo-v1-cat-tree": {
+  "status": 404,
+  "type": "text/html;charset=UTF-8",
+  "head": "<html><body><h1>Error 404</h1></body></html>"
+ },
+ "lidl-ofertas": {
+  "status": 404,
+  "type": "text/html",
+  "bytes": 159852,
+  "hints": [
+   "application/ld+json"
+  ],
+  "head": "<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"utf-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <link rel=\"icon\" type=\"image/svg+xml\" href=\"/cdn/assets/logos/1.0.1/lidl-logo-shop-cdn.svg\"><link rel=\"alternate icon\" href=\"/cdn/assets/logos/1.0.1/lidl-logo-shop-cdn.svg\"><script type=\"application/ld+json\">{ \"@context\": \"https://schema.org\", \"@type\": \"Organizati"
+ },
+ "lidl-search-api": {
+  "status": 200,
+  "type": "application/mindshift.search+json;version=2",
+  "bytes": 436789,
+  "hints": [
+   "\"price\"",
+   "\"ean\""
+  ],
+  "head": "{\"type\":\"search\",\"version\":\"v2.0.0\",\"engine\":\"ldt-searcher\",\"xPayload\":{\"keywordResults\":{\"num_items_found\":36}},\"id\":\"9030a1af-a3b4-41b9-89a4-ed2e32624dcc\",\"q\":\"leche\",\"locale\":\"es_ES\",\"assortment\":\"ES\",\"resultType\":\"search\",\"masterQuery\":\"leche\",\"numFound\":82,\"offset\":0,\"fetchsize\":36,\"maxfetchsize\":1000,\"sort\":{\"code\":\"relevancy\",\"label\":\"Relevancia\",\"url\":\"/q/api/search?assortment=ES&locale=es"
+ },
+ "aldi": {
+  "status": 200,
+  "type": "text/html; charset=utf-8",
+  "bytes": 119894,
+  "hints": [
+   "__NEXT_DATA__"
+  ],
+  "head": "<!DOCTYPE html><html lang=\"es\"><head><meta charSet=\"utf-8\" data-next-head=\"\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" data-next-head=\"\"/><title data-next-head=\"\">Productos ALDI - Alimentación, frescos y hogar al mejor precio</title><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" data-next-head=\"\"/><meta name=\"description\" content=\"Descubre los productos de ALDI p"
+ },
+ "aldi-search": {
+  "status": 404,
+  "type": "text/html; charset=utf-8",
+  "bytes": 66214,
+  "hints": [
+   "__NEXT_DATA__"
+  ],
+  "head": "<!DOCTYPE html><html lang=\"es\"><head><meta charSet=\"utf-8\" data-next-head=\"\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" data-next-head=\"\"/><title data-next-head=\"\">Página no encontrada – ALDI España</title><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" data-next-head=\"\"/><meta name=\"description\" content=\"No hemos encontrado la página que buscas. Descubre nuestras "
+ },
+ "bonpreu": {
+  "status": 200,
+  "type": "text/html;charset=utf-8",
+  "bytes": 1026043,
+  "hints": [
+   "application/ld+json",
+   "captcha",
+   "__INITIAL_STATE__",
+   "\"price\""
+  ],
+  "head": "<!doctype html>\n<html lang=\"ca-ES\" dir=\"ltr\" data-theme=\"system\">\n    <head>\n        <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\" />\n        <meta charset=\"utf-8\" />\n        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n        <title data-rh=\"true\">Resultats de la cerca per a llet - BonpreuEsclat online El teu supermercat per comprar online</title><meta data-rh="
+ },
+ "caprabo": {
+  "status": 403,
+  "type": "text/html; charset=UTF-8",
+  "bytes": 134,
+  "hints": [],
+  "head": "<!doctype html><meta charset=\"utf-8\"><meta name=viewport content=\"width=device-width, initial-scale=1\"><title>403</title>403 Forbidden"
+ },
+ "ahorramas": {
+  "status": 200,
+  "type": "text/html;charset=UTF-8",
+  "bytes": 812800,
+  "hints": [
+   "application/ld+json",
+   "\"price\"",
+   "data-price"
+  ],
+  "head": "<!DOCTYPE html>\n<html lang=\"es\" translate=\"no\">\n<head>\n<!--[if gt IE 9]><!-->\n<script>//common/scripts.isml</script>\n<script defer type=\"text/javascript\" src=\"/on/demandware.static/Sites-Ahorramas-Site/-/es/v1791537096624/js/main.js\"></script>\n\n    <script defer type=\"text/javascript\" src=\"/on/demandware.static/Sites-Ahorramas-Site/-/es/v1791537096624/js/search.js\"\n        \n        >\n    </script>"
+ },
+ "hipercor": {
+  "status": 403,
+  "type": "text/html",
+  "bytes": 402,
+  "hints": [
+   "Access Denied"
+  ],
+  "head": "<HTML><HEAD>\n<TITLE>Access Denied</TITLE>\n</HEAD><BODY>\n<H1>Access Denied</H1>\n \nYou don't have permission to access \"http&#58;&#47;&#47;www&#46;hipercor&#46;es&#47;supermercado&#47;buscar&#47;&#63;\" on this server.<P>\nReference&#32;&#35;18&#46;6d743617&#46;1791591113&#46;d5402d81\n<P>https&#58;&#47;&#47;errors&#46;edgesuite&#46;net&#47;18&#46;6d743617&#46;1791591113&#46;d5402d81</P>\n</BODY>\n</HTML"
+ },
+ "elcorteingles": {
+  "status": 403,
+  "type": "text/html",
+  "bytes": 407,
+  "hints": [
+   "Access Denied"
+  ],
+  "head": "<HTML><HEAD>\n<TITLE>Access Denied</TITLE>\n</HEAD><BODY>\n<H1>Access Denied</H1>\n \nYou don't have permission to access \"http&#58;&#47;&#47;www&#46;elcorteingles&#46;es&#47;supermercado&#47;buscar&#47;&#63;\" on this server.<P>\nReference&#32;&#35;18&#46;6d743617&#46;1791591113&#46;d540446b\n<P>https&#58;&#47;&#47;errors&#46;edgesuite&#46;net&#47;18&#46;6d743617&#46;1791591113&#46;d540446b</P>\n</BODY>\n<"
+ },
+ "gadis": {
+  "status": 404,
+  "type": "text/html; charset=utf-8",
+  "bytes": 4843,
+  "hints": [
+   "__NEXT_DATA__"
+  ],
+  "head": "<!DOCTYPE html><html lang=\"es\"><head><meta charSet=\"utf-8\" data-next-head=\"\"/><meta name=\"viewport\" content=\"width=device-width\" data-next-head=\"\"/><link rel=\"shortcut icon\" href=\"/static/images/favicon.ico\" data-next-head=\"\"/><title data-next-head=\"\">Error 404 | Gadisline</title><link data-next-font=\"\" rel=\"preconnect\" href=\"/\" crossorigin=\"anonymous\"/><script id=\"google-analytics-consent\" data-n"
+ },
+ "bm": {
+  "status": 200,
+  "type": "text/html",
+  "bytes": 59865,
+  "hints": [],
+  "head": "<!doctype html>\n  <html lang data-beasties-container>\n\n  <head>\n    <meta charset=\"utf-8\">\n    <title></title><script id=\"cookiefirst\" src=\"https://consent.cookiefirst.com/sites/online.bmsupermercados.es-d073e67d-0442-4075-a928-db3f049e250b/consent.js\" data-language=\"es\" type=\"text/javascript\"></script>\n    <base href=\"/\">\n    <link rel=\"preconnect\" href=\"https://cdn-bm.aktiosdigitalservices.com\">"
+ },
+ "froiz": {
+  "status": 0,
+  "bytes": 12,
+  "hints": [],
+  "head": "fetch failed"
+ },
+ "condis": {
+  "status": 0,
+  "bytes": 12,
+  "hints": [],
+  "head": "fetch failed"
+ },
+ "masymas": {
+  "status": 0,
+  "bytes": 12,
+  "hints": [],
+  "head": "fetch failed"
+ },
+ "family-cash": {
+  "status": 404,
+  "type": "text/html; charset=UTF-8",
+  "bytes": 110618,
+  "hints": [
+   "captcha"
+  ],
+  "head": "<!doctype html>\r\n\r\n\r\n<html lang=\"es\" >\r\n<head>\r\n\r\n<!-- Meta Tags -->\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\r\n\r\n\r\n\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0\" />\r\n\r\n\t\r\n\r\n<!--Shortcut icon-->\r\n\t<link rel=\"shortcut icon\" href=\"https://www.familycash.es/wp-content/uploads/2013/08/family-cash-1-e1633689136534.png\""
+ },
+ "dia-home": {
+  "status": 403,
+  "type": "text/html",
+  "bytes": 364,
+  "hints": [
+   "Access Denied"
+  ],
+  "head": "<HTML><HEAD>\n<TITLE>Access Denied</TITLE>\n</HEAD><BODY>\n<H1>Access Denied</H1>\n \nYou don't have permission to access \"http&#58;&#47;&#47;www&#46;dia&#46;es&#47;\" on this server.<P>\nReference&#32;&#35;18&#46;3acd2f17&#46;1791591128&#46;24b56951\n<P>https&#58;&#47;&#47;errors&#46;edgesuite&#46;net&#47;18&#46;3acd2f17&#46;1791591128&#46;24b56951</P>\n</BODY>\n</HTML>\n"
+ }
+}
