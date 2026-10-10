@@ -368,7 +368,11 @@ const esc = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">
 const norm = s => String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
 const monthKey = (d=new Date()) => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
 function toast(t){document.querySelectorAll(".toast").forEach(x=>x.remove());const d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2400)}
-const thumb = (p,n) => p&&p.img ? `<img class="thumb" src="${esc(p.img)}" alt="" loading="lazy" width="${n}" height="${n}" style="width:${n}px;height:${n}px">` : `<span class="thumb empty" style="width:${n}px;height:${n}px"></span>`;
+const thumb = (p,n) => p&&p.img ? `<img class="thumb" src="${esc(p.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="imgFail(this)" width="${n}" height="${n}" style="width:${n}px;height:${n}px">` : `<span class="thumb empty" style="width:${n}px;height:${n}px"></span>`;
+function imgFail(img){ // 1º reintento sin parámetros; si vuelve a fallar, hueco vacío
+  if(!img.dataset.retry && img.src.includes("?")){img.dataset.retry=1;img.src=img.src.split("?")[0];return}
+  img.onerror=null; img.removeAttribute("src"); img.classList.add("empty"); img.style.background="rgba(255,255,255,.05)";
+}
 const unitLabel = u => u==="kg"?"kg":u==="l"?"L":"ud";
 const refTxt = p => p.unitPrice!=null && p.unit ? `${eur(p.unitPrice)}/${unitLabel(p.unit)}` : "";
 const chev = `<svg class="chev"><use href="#i-chev"/></svg>`;
@@ -408,11 +412,20 @@ history.replaceState({d:1},"");
 const refresh=()=>{const cur=stack[stack.length-1];(RENDER[cur.id]||(()=>{}))(cur)};
 
 /* ================= Datos de precios ================= */
+let DF=new Map(); const idf=t=>Math.log(1+PRODUCTS.length/((DF.get(t)||0)+1));
 let PRODUCTS=[], BY_ID=new Map(), BY_CHAIN={}, META={chains:{},updated:null}, LOADED=false, LOAD_ERR=false;
 const STOP = new Set("de del la el los las y con sin en para al a o pack brik brick botella bote paquete bolsa lata tarro garrafa caja bandeja malla barqueta tarrina vaso frasco envase hacendado consum deliplus bosque verde compy carrefour dia alcampo auchan eroski bonpreu ahorramas alipende granel aprox pieza piezas unidad unidades ud uds g kg ml l cl x formato familiar docena media".split(" "));
+// Sinónimos y raíces para que "espaguetis", "spaghetti" o "macarrones" se reconozcan como lo mismo
+const SYN={espagueti:"spaghetti",espaguetis:"spaghetti",spaguetti:"spaghetti",tallarine:"tallarin",cocacola:"cola",yoghourt:"yogur",yogurt:"yogur",iogurt:"yogur",
+  sifon:"soda",garbanzo:"garbanzo",judia:"alubia",habichuela:"alubia",frijol:"alubia",fideua:"fideo",zero:"0",cero:"0",light:"0",
+  semi:"semidesnatada",semidesnatado:"semidesnatada",desnatado:"desnatada",entero:"entera",virgen:"virgen",aove:"oliva",jamon:"jamon",york:"cocido",
+  papel:"papel",higienico:"higienico",detergente:"detergente",lavavajilla:"lavavajillas",platano:"platano",banana:"platano",refresco:"refresco"};
+const stem=w=>{w=w.length>4&&/[^aeiou]es$/.test(w)?w.slice(0,-2):w.length>3&&w.endsWith("s")?w.slice(0,-1):w;return SYN[w]||w};
+const tokens=t=>norm(t).replace(/coca[\s-]?cola/g,"cola").split(/[^a-z0-9ñ%]+/).filter(w=>w&&(w.length>1||w==="0")&&!STOP.has(w)&&!/^\d+[a-z]*$/.test(w)||w==="0").map(stem);
 function prep(p){
   p._n = norm(p.name+" "+(p.sub||"")+" "+(p.cat||"")+" "+(p.brand||""));
-  p._t = [...new Set(norm(p.name).split(/[^a-z0-9ñ]+/).filter(w=>w.length>1 && !STOP.has(w) && !/^\d/.test(w)))];
+  const brand=new Set(tokens(p.brand||""));
+  p._t = [...new Set(tokens(p.name.replace(/0\s*%/g," 0 ")))].filter(w=>!brand.has(w)||w===tokens(p.name)[0]);
 }
 function fromV1(j){
   return {updated:j.updated, chains:{mercadona:j.chains?.mercadona||{}}, products:j.products.map(p=>{
@@ -426,6 +439,7 @@ async function loadPrices(){
     PRODUCTS=j.products.filter(p=>CHAINS[p.chain]&&p.price>0); PRODUCTS.forEach(prep);
     BY_ID=new Map(PRODUCTS.map(p=>[p.id,p])); BY_CHAIN={};
     PRODUCTS.forEach(p=>(BY_CHAIN[p.chain]||(BY_CHAIN[p.chain]=[])).push(p));
+    DF=new Map(); for(const p of PRODUCTS) for(const t of p._t) DF.set(t,(DF.get(t)||0)+1);
     META={chains:j.chains||{},updated:j.updated}; LOADED=true;
     const before=S.list.length; S.list=S.list.filter(it=>BY_ID.has(it.id)); if(S.list.length!==before) save("list");
   }catch(e){LOAD_ERR=true}
@@ -435,22 +449,31 @@ const DATA_CHAINS = () => Object.keys(CHAINS).filter(c=>BY_CHAIN[c]);
 const chainsTxt = () => { const n=DATA_CHAINS().map(c=>CHAINS[c].name); return n.length>1?n.slice(0,-1).join(", ")+" y "+n.slice(-1):n.join(""); };
 
 /* ============ Equivalentes entre cadenas ============ */
+// Busca en otra cadena el producto del mismo tipo. Las primeras palabras del nombre ("spaghetti", "leche entera")
+// pesan más que las del final (marca, "al huevo", "Asturiana"); el tamaño no descarta, se compara por precio por kg/L.
 function candidates(p, chain, limit=6){
   if(p.chain===chain) return [{p,score:1}];
   const pool=BY_CHAIN[chain]||[]; const T=p._t; if(!T.length) return [];
-  const need = T.length<=2 ? T.length : Math.ceil(T.length*0.67);
+  const W=T.map((t,i)=>(i===0?2:i===1?1.5:i===2?1:0.6)*idf(t)), total=W.reduce((a,b)=>a+b,0);
+  const head=T[0], head2=T[1], key=(T.length>1&&W[1]>W[0])?T[1]:T[0];
   const out=[];
   for(const c of pool){
-    if(p.unit && c.unit && p.unit!==c.unit) continue;
-    if(p.qty && c.qty){const r=c.qty/p.qty; if(r<0.45||r>2.2) continue;}
-    let hit=0; for(const t of T) if(c._t.includes(t)) hit++;
-    if(hit<need) continue;
-    out.push({p:c,score:0.7*hit/T.length + 0.3*hit/Math.max(c._t.length,1)});
+    const C=c._t; if(!C.length) continue;
+    const hasHead=C.includes(head), cHeadIn=T.includes(C[0]);
+    if(!hasHead && !(cHeadIn && (C[0]===head2||C.includes(head2)))) continue;
+    if(!C.includes(key)) continue;                           // la palabra que define el producto tiene que estar
+    let sc=0; T.forEach((t,i)=>{if(C.includes(t))sc+=W[i]});
+    sc/=total;
+    if(!cHeadIn) sc-=0.25;                                  // "Alubias con tomate" no es "Tomate frito"
+    sc-=0.04*C.filter(t=>!T.includes(t)).length;            // palabras de más
+    if(p.unit&&c.unit&&p.unit!==c.unit) sc-=0.15;
+    if(p.qty&&c.qty&&p.unit===c.unit){const r=c.qty/p.qty; if(r<0.2||r>5) sc-=0.1}
+    if(sc>=0.28) out.push({p:c,score:sc});
   }
   out.sort((a,b)=>b.score-a.score);
   const top=out[0]?.score??0;
-  const tier=out.filter(x=>x.score>=top-0.15).sort((a,b)=>eqCost(p,a.p)-eqCost(p,b.p));
-  return tier.concat(out.filter(x=>x.score<top-0.15)).slice(0,limit);
+  const tier=out.filter(x=>x.score>=top-0.12).sort((a,b)=>eqCost(p,a.p)-eqCost(p,b.p));
+  return tier.concat(out.filter(x=>x.score<top-0.12)).slice(0,limit);
 }
 function eqCost(base, m){
   if(base.chain!==m.chain && base.qty && m.unitPrice!=null && base.unit===m.unit) return m.unitPrice*base.qty;
@@ -568,7 +591,6 @@ function cleanLine(raw){
 function splitLines(txt){
   return txt.split(/\n|,|;/).map(cleanLine).filter(x=>(x.text.match(/[a-záéíóúñ]/gi)||[]).length>=3);
 }
-const stem=w=>w.length>4&&w.endsWith("es")&&!/[aeiou]es$/.test(w)?w.slice(0,-2):w.length>3&&w.endsWith("s")?w.slice(0,-1):w;
 function guessProducts(text, limit=6){
   const mem=ocrMem()[norm(text)];
   const words=[...new Set(norm(text).split(/[^a-z0-9ñ]+/).filter(w=>w.length>1&&!OCR_STOP.has(w)&&!/^\d+$/.test(w)).map(stem))];
@@ -712,7 +734,7 @@ function renderProduct(cur){
   $("#prName").textContent=p.name;
   const eqs=DATA_CHAINS().filter(c=>c!==p.chain).map(c=>({c,m:candidates(p,c,1)[0]?.p})).filter(x=>x.m).map(x=>({...x,cost:eqCost(p,x.m)})).sort((a,b)=>a.cost-b.cost);
   const cheapest=eqs.length&&eqs[0].cost<p.price-0.005?eqs[0]:null;
-  $("#prBody").innerHTML=`<div class="card">${p.img?`<img class="hero-img" src="${esc(p.img)}" alt="">`:""}
+  $("#prBody").innerHTML=`<div class="card">${p.img?`<img class="hero-img" src="${esc(p.img)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:""}
     <div class="row between"><div><span class="chip"><span class="dot" style="background:${chainColor(p.chain)}"></span>${CHAINS[p.chain].name}</span> <span class="muted small">${esc(p.size||"")}</span>${p.prev?' <span class="chip pink">Rebajado</span>':""}</div>
     <div class="price" style="font-size:28px">${p.prev?`<s>${eur(p.prev)}</s>`:""}${eur(p.price)}<div class="small muted" style="font-weight:600">${refTxt(p)}</div></div></div>
     ${cheapest?`<p class="small" style="color:var(--green);font-weight:700">En ${CHAINS[cheapest.c].name} te sale ${eur(p.price-cheapest.cost)} más barato.</p>`:eqs.length?`<p class="small" style="color:var(--green);font-weight:700">Es la opción más barata.</p>`:""}
