@@ -32,13 +32,14 @@ jobs:
         with:
           node-version: 20
 
-      - name: Instalar Chrome automático (para Alcampo y Bonpreu)
+      - name: Instalar Chrome automático (solo si se piden Alcampo o Bonpreu)
+        if: contains(github.event.inputs.solo, 'alcampo') || contains(github.event.inputs.solo, 'bonpreu')
         run: |
           npm init -y > /dev/null
           npm install --no-save playwright@1.47.2
           npx playwright install --with-deps chromium
 
-      - name: Descargar precios de todas las cadenas
+      - name: Descargar precios (Mercadona, Consum y Ahorramás)
         env:
           ONLY: ${{ github.event.inputs.solo }}
           CP: ${{ vars.CODIGO_POSTAL }}   # opcional: Settings → Secrets and variables → Actions → Variables

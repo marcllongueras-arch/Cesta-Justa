@@ -8,7 +8,11 @@ import { normalize } from "./normalize.mjs";
 
 const ocado = name => async () => (await import("./ocado.mjs"))[name]();
 const SOURCES = { mercadona: scrapeMercadona, consum: scrapeConsum, ahorramas: scrapeAhorramas, alcampo: ocado("scrapeAlcampo"), bonpreu: ocado("scrapeBonpreu") };
+// Alcampo y Bonpreu bloquean las conexiones desde servidores: solo se intentan si se piden expresamente
+// (o cuando el script se ejecute desde una conexión de casa).
+const DEFAULT = ["mercadona", "consum", "ahorramas"];
 const only = (process.env.ONLY || "").split(",").filter(Boolean);
+if (!only.length) only.push(...DEFAULT);
 
 let prev = { chains: {}, products: [] };
 try { prev = JSON.parse(await readFile("precios.json", "utf8")); } catch {}
