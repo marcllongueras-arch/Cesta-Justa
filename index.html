@@ -4,540 +4,593 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cesta Justa</title>
-<meta name="theme-color" content="#1F5E4B">
+<meta name="theme-color" content="#0B0D1A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Cesta Justa">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
 <style>
-/* Layout: app de una columna tipo ticket de compra, pestañas fijas abajo, totales en monoespaciada */
+/* Layout: app oscura de una columna con tarjetas de cristal, barra inferior con botón central de escanear */
 :root{
-  --bg:#F3F5F0; --surface:#FFFFFF; --ink:#18241E; --muted:#5E6B63; --line:#DCE2DA;
-  --accent:#1F5E4B; --accent-ink:#FFFFFF; --accent-soft:#DDEBE4;
-  --warn:#B86A00; --bad:#B3261E; --good:#2E7D32;
+  --bg:#0B0D1A; --bg2:#12142A; --card:rgba(255,255,255,.035); --card-hi:rgba(255,255,255,.06);
+  --line:rgba(255,255,255,.08); --ink:#F4F2FA; --muted:#9A98B3; --dim:#5D5B78;
+  --pink:#FF4FB8; --violet:#9B5CFF; --rose:#FF5A87;
+  --grad:linear-gradient(90deg,#FF5A87 0%,#F04BD3 55%,#9B5CFF 100%);
+  --grad-round:linear-gradient(135deg,#FF5AA5 0%,#B23ACD 100%);
+  --glow:0 8px 28px rgba(240,75,211,.38);
+  --green:#2ED39A; --green-deep:#0F6E52; --amber:#FFB547; --red:#FF6B6B;
   --ns-a:#038141; --ns-b:#85BB2F; --ns-c:#E5A800; --ns-d:#EE8100; --ns-e:#E63E11;
-  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
-  --f-body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-  color-scheme:light;
+  --f:"Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#101814; --surface:#18221D; --ink:#E6EDE8; --muted:#9AA8A0; --line:#2A3730;
-  --accent:#6CC3A4; --accent-ink:#0C1A14; --accent-soft:#1E3A30;
-  --warn:#F0A64A; --bad:#FF8A80; --good:#81C784; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#101814; --surface:#18221D; --ink:#E6EDE8; --muted:#9AA8A0; --line:#2A3730;
-  --accent:#6CC3A4; --accent-ink:#0C1A14; --accent-soft:#1E3A30;
-  --warn:#F0A64A; --bad:#FF8A80; --good:#81C784; color-scheme:dark}
-*{box-sizing:border-box}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
 html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--f-body);-webkit-text-size-adjust:100%}
-header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line)}
-.brand{font:800 22px/1 var(--f-display);letter-spacing:-.02em}
-.brand span{color:var(--accent)}
-.cp-chip{font:500 13px var(--f-mono);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 12px;color:var(--ink);cursor:pointer}
-main{max-width:640px;margin:0 auto;padding:16px 16px 110px;display:flex;flex-direction:column;gap:16px}
-section.view{display:flex;flex-direction:column;gap:16px}
-h2{font:700 24px/1.15 var(--f-display);margin:4px 0 0;letter-spacing:-.01em;text-wrap:balance}
-h3{font:600 13px var(--f-body);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0}
+body{background-color:var(--bg);background-image:radial-gradient(rgba(255,255,255,.055) 1px,transparent 1.2px);background-size:22px 22px;background-attachment:fixed;color:var(--ink);font:500 15px/1.5 var(--f);min-height:100vh}
+main{max-width:620px;margin:0 auto;padding:max(18px,env(safe-area-inset-top,0px)) 20px 130px;display:flex;flex-direction:column;gap:22px}
+section.view{display:flex;flex-direction:column;gap:22px}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding-top:10px}
+h1{font:800 30px/1.1 var(--f);margin:0;letter-spacing:-.02em}
+.sub{color:var(--muted);font-size:16px;margin-top:6px}
+.label{font:700 13px/1 var(--f);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:6px 0 -8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:14px;backdrop-filter:blur(6px)}
+.card.hero{background:linear-gradient(160deg,rgba(176,58,205,.28),rgba(255,79,184,.10) 55%,rgba(255,255,255,.02));border-color:rgba(240,75,211,.35);box-shadow:0 0 0 1px rgba(240,75,211,.06),0 20px 50px -20px rgba(240,75,211,.35)}
+.eyebrow{font:700 13px var(--f);letter-spacing:.1em;text-transform:uppercase;color:var(--pink)}
+.big{font:800 44px/1 var(--f);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.muted{color:var(--muted)} .small{font-size:13px} .num{font-variant-numeric:tabular-nums}
 p{margin:0}
-.muted{color:var(--muted)}
-.small{font-size:13px}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.row > .grow{flex:1 1 140px;min-width:0}
-input,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;min-width:0}
-input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-button{font:600 14px var(--f-body);border:0;border-radius:10px;padding:10px 14px;cursor:pointer;background:var(--accent);color:var(--accent-ink)}
-button.ghost{background:transparent;color:var(--accent);border:1px solid var(--line)}
-button.icon{padding:6px 10px;background:transparent;color:var(--muted);border:1px solid var(--line)}
-button:disabled{opacity:.5;cursor:default}
-.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
-.big{font:700 34px/1 var(--f-mono);letter-spacing:-.02em}
-.bar{height:10px;background:var(--bg);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
-.bar > i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
-.bar.over > i{background:var(--bad)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row>.grow{flex:1 1 140px;min-width:0}
+.between{justify-content:space-between}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;display:flex;gap:12px;align-items:center;min-width:0}
+.tile b{display:block;font:800 26px/1.1 var(--f);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.tile span{color:var(--muted);font-size:14px}
+.badge{width:46px;height:46px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--grad-round);box-shadow:inset 0 0 0 3px rgba(255,255,255,.08),0 0 0 2px rgba(240,75,211,.35)}
+.badge svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.badge.green{background:linear-gradient(135deg,#2ED39A,#0F6E52);box-shadow:inset 0 0 0 3px rgba(255,255,255,.08),0 0 0 2px rgba(46,211,154,.35)}
+.btn{font:700 16px var(--f);border:0;border-radius:999px;padding:16px 22px;cursor:pointer;color:#fff;background:var(--grad);box-shadow:var(--glow);display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none}
+.btn.block{width:100%}
+.btn.ghost{background:transparent;box-shadow:none;border:1px solid var(--line);color:var(--ink);font-weight:600}
+.btn.sm{padding:9px 14px;font-size:14px}
+.btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.btn:disabled{opacity:.45}
+input,select{font:500 16px var(--f);color:var(--ink);background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:16px;padding:13px 16px;width:100%;min-width:0}
+input::placeholder{color:var(--dim)}
+select option{background:var(--bg2)}
+:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.bar{height:10px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--grad);border-radius:99px;box-shadow:0 0 12px rgba(240,75,211,.6);transition:width .4s}
+.bar.over>i{background:var(--red);box-shadow:none}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
+.week .d{color:var(--muted);font-weight:700;font-size:14px}
+.week .d.today{color:var(--ink)}
+.week .c{width:40px;height:40px;margin:8px auto 0;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;color:var(--dim)}
+.week .c.on{background:var(--grad-round);border-color:transparent;color:#fff;box-shadow:0 0 14px rgba(240,75,211,.45)}
+.week .c.today{border-color:var(--pink)}
+.week .c svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 ul.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
-ul.list li{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line)}
+ul.list li{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
 ul.list li:last-child{border-bottom:0}
-ul.list .grow{flex:1;min-width:0}
-.name{font-weight:600;overflow-wrap:anywhere}
-.qty{display:flex;align-items:center;gap:4px}
-.qty button{padding:2px 9px;background:var(--bg);color:var(--ink);border:1px solid var(--line)}
-.qty span{min-width:22px;text-align:center}
-.pill{display:inline-block;font:600 11px var(--f-body);text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
-.pill.warn{background:transparent;border:1px solid var(--warn);color:var(--warn)}
-.pill.off{background:transparent;border:1px solid var(--line);color:var(--muted)}
-.ticket{font-family:var(--f-mono);font-size:14px;display:flex;flex-direction:column}
-.trow{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:baseline;padding:9px 0;border-bottom:1px dashed var(--line)}
-.trow:last-child{border-bottom:0}
-.trow .rank{color:var(--muted);width:1.6em}
-.trow .who{font-family:var(--f-body);font-weight:600;min-width:0}
-.trow .who small{display:block;font-weight:400;color:var(--muted);font-size:12px}
-.trow.best .who,.trow.best .tot{color:var(--accent)}
-.tot{font-weight:700;text-align:right}
-.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:1px}
-.score{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font:700 20px var(--f-mono);color:#fff;flex:none}
-.ns{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:6px;font:800 14px var(--f-display);color:#fff;text-transform:uppercase}
-.nsA{background:var(--ns-a)}.nsB{background:var(--ns-b)}.nsC{background:var(--ns-c)}.nsD{background:var(--ns-d)}.nsE{background:var(--ns-e)}.nsX{background:var(--muted)}
-video{width:100%;border-radius:12px;background:#000;aspect-ratio:4/3;object-fit:cover;max-width:100%}
-.note{font-size:13px;color:var(--muted);border-left:3px solid var(--line);padding-left:10px}
-.suggest{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;overflow:hidden}
-.suggest button{background:var(--surface);color:var(--ink);text-align:left;border-radius:0;border-bottom:1px solid var(--line);font-weight:500}
+.grow{flex:1;min-width:0}
+.name{font-weight:700;overflow-wrap:anywhere;line-height:1.3}
+.thumb{border-radius:14px;background:#fff;object-fit:contain;flex:none;padding:3px}
+.thumb.empty{background:rgba(255,255,255,.05)}
+.qty{display:flex;align-items:center;gap:2px;background:rgba(255,255,255,.05);border-radius:99px;padding:3px}
+.qty button{width:30px;height:30px;border-radius:50%;border:0;background:transparent;color:var(--ink);font:700 18px var(--f);cursor:pointer}
+.qty span{min-width:20px;text-align:center;font-weight:700}
+.chip{display:inline-flex;align-items:center;gap:6px;font:700 12px var(--f);padding:4px 10px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--ink);white-space:nowrap}
+.chip.pink{background:rgba(240,75,211,.16);color:var(--pink)}
+.chip.green{background:rgba(46,211,154,.14);color:var(--green)}
+.chip.off{color:var(--dim)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none;display:inline-block}
+.seg{display:flex;background:rgba(255,255,255,.05);border-radius:99px;padding:4px}
+.seg button{flex:1;border:0;background:transparent;color:var(--muted);font:700 14px var(--f);padding:9px 14px;border-radius:99px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--grad);color:#fff;box-shadow:var(--glow)}
+.rank{display:flex;flex-direction:column;gap:10px}
+.rk{border:1px solid var(--line);border-radius:20px;padding:14px 16px;background:rgba(255,255,255,.025)}
+.rk.best{border-color:rgba(240,75,211,.55);background:linear-gradient(120deg,rgba(240,75,211,.16),rgba(155,92,255,.08));box-shadow:0 0 24px -8px rgba(240,75,211,.6)}
+.rk summary{list-style:none;display:flex;align-items:center;gap:12px;cursor:pointer}
+.rk summary::-webkit-details-marker{display:none}
+.rk .tot{font:800 22px var(--f);font-variant-numeric:tabular-nums}
+.rk.best .tot{color:var(--pink)}
+.rk .items{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.mi{display:flex;gap:10px;align-items:center}
+.mi select{padding:6px 10px;font-size:13px;border-radius:10px;margin-top:4px}
+.pcard{display:flex;flex-direction:column;gap:12px}
+.ptop{display:flex;gap:12px;align-items:flex-start}
+.price{font:800 22px var(--f);font-variant-numeric:tabular-nums;text-align:right}
+.price s{display:block;font:600 13px var(--f);color:var(--dim)}
+.eqs{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:12px}
+.eq{display:flex;gap:10px;align-items:center;font-size:14px}
+.score{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font:800 22px var(--f);color:#fff;flex:none}
+.ns{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;font:800 14px var(--f);color:#fff;text-transform:uppercase;flex:none}
+.nsA{background:var(--ns-a)}.nsB{background:var(--ns-b)}.nsC{background:var(--ns-c)}.nsD{background:var(--ns-d)}.nsE{background:var(--ns-e)}.nsX{background:var(--dim)}
+video{width:100%;border-radius:20px;background:#000;aspect-ratio:4/3;object-fit:cover}
+.suggest{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--bg2)}
+.suggest button{display:flex;gap:10px;align-items:center;text-align:left;background:transparent;color:var(--ink);border:0;border-bottom:1px solid var(--line);padding:10px 12px;font:600 14px var(--f);cursor:pointer}
 .suggest button:last-child{border-bottom:0}
-nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
-nav.tabs button{background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;font:600 11px var(--f-body)}
-nav.tabs button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-nav.tabs button[aria-current="page"]{color:var(--accent)}
-.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;z-index:20;max-width:calc(100% - 32px)}
-.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
-.seg button{flex:1;background:transparent;color:var(--muted);border-radius:0}
-.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
-a{color:var(--accent)}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.note{font-size:13px;color:var(--muted);line-height:1.5}
+a{color:var(--pink)}
+.empty-state{color:var(--muted);text-align:center;padding:10px 6px}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:rgba(11,13,26,.92);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr 96px 1fr 1fr;align-items:end;padding:8px 6px calc(10px + env(safe-area-inset-bottom,0px))}
+nav.tabs button{background:transparent;border:0;color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:4px;font:700 12px var(--f);cursor:pointer;padding:4px 0}
+nav.tabs button svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav.tabs button[aria-current="page"]{color:var(--pink)}
+nav.tabs .fab{position:relative;top:-24px;width:74px;height:74px;margin:0 auto;border-radius:50%;background:var(--grad-round);border:5px solid var(--bg);box-shadow:0 0 0 2px rgba(240,75,211,.55),0 0 30px rgba(240,75,211,.55);color:#fff;justify-content:center}
+nav.tabs .fab svg{width:30px;height:30px}
+.toast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%);background:var(--bg2);border:1px solid rgba(240,75,211,.4);color:var(--ink);padding:12px 18px;border-radius:16px;font-weight:700;z-index:20;max-width:calc(100% - 40px);box-shadow:var(--glow)}
+.loading{display:flex;align-items:center;gap:10px;color:var(--muted)}
+.spin{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.15);border-top-color:var(--pink);animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:380px){.big{font-size:38px}.tile b{font-size:22px}.badge{width:40px;height:40px}}
 </style>
 </head>
 <body>
-<header class="top">
-  <div class="brand">Cesta<span>Justa</span></div>
-  <button class="cp-chip" id="cpChip" type="button">CP —</button>
-</header>
-
 <main>
-<!-- PRESUPUESTO -->
-<section class="view" id="v-presupuesto">
-  <h2>Presupuesto del mes</h2>
-  <div class="panel">
-    <div class="row" style="justify-content:space-between;align-items:flex-end;flex-wrap:nowrap">
-      <div><h3>Te queda</h3><div class="big" id="bRemain">0,00 €</div></div>
-      <div style="text-align:right"><h3>Gastado</h3><div class="num small" id="bSpent">0,00 €</div></div>
+
+<!-- ============ HOY ============ -->
+<section class="view" id="v-hoy">
+  <div class="head"><div><h1>Tu compra</h1><div class="sub" id="hoySub">—</div></div>
+    <button class="chip" id="cpChip" type="button">📍 CP —</button></div>
+
+  <div class="card hero">
+    <div class="eyebrow" id="bMonth">Presupuesto</div>
+    <div class="row between" style="align-items:flex-end">
+      <div><div class="big grad-text" id="bRemain">0 €</div><div class="muted" style="margin-top:6px">te quedan este mes</div></div>
+      <div class="badge"><svg viewBox="0 0 24 24"><path d="M3 7h18v12H3z"/><path d="M3 11h18M16 15h2"/></svg></div>
     </div>
     <div class="bar" id="bBar"><i style="width:0"></i></div>
-    <p class="small muted" id="bHint"></p>
+    <p class="muted" id="bHint"></p>
+    <button class="btn block" type="button" data-go="lista"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.5 11h11L21 8H7"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg>Comparar mi lista</button>
   </div>
-  <div class="panel">
-    <h3>Presupuesto mensual</h3>
-    <div class="row"><input id="bAmount" class="grow" type="number" inputmode="decimal" min="0" step="1" placeholder="Ej. 350"><button id="bSave" type="button">Guardar</button></div>
+
+  <div class="grid2">
+    <div class="tile"><div class="badge"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div><b id="tSpent">0 €</b><span>gastado</span></div></div>
+    <div class="tile"><div class="badge"><svg viewBox="0 0 24 24"><path d="M6 2l-2 4v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6l-2-4z"/><path d="M4 6h16M16 10a4 4 0 0 1-8 0"/></svg></div><div><b id="tCount">0</b><span>compras</span></div></div>
+    <div class="tile"><div class="badge"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></div><div><b id="tSaved">0 €</b><span>ahorrado</span></div></div>
+    <div class="tile"><div class="badge green"><svg viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-11a5 5 0 0 1 8-4 5 5 0 0 1 8 4c0 6.5-8 11-8 11z"/></svg></div><div><b id="tHealthy">0</b><span>sanos</span></div></div>
   </div>
-  <div class="panel">
-    <h3>Añadir compra</h3>
-    <div class="row">
-      <select id="pStore" class="grow"></select>
-      <input id="pAmount" class="grow" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Importe €">
-      <button id="pAdd" type="button">Añadir</button>
-    </div>
-    <ul class="list" id="pList"></ul>
+
+  <div class="label">Tu semana</div>
+  <div class="card"><div class="week" id="week"></div></div>
+
+  <div class="label">Añadir compra</div>
+  <div class="card">
+    <div class="row"><select id="pStore" class="grow"></select><input id="pAmount" class="grow" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Importe €"></div>
+    <button id="pAdd" class="btn block" type="button"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Añadir compra</button>
   </div>
+
+  <div class="label">Últimas compras</div>
+  <div class="card"><ul class="list" id="pList"></ul></div>
+
+  <div class="label">Presupuesto mensual</div>
+  <div class="card"><div class="row"><input id="bAmount" class="grow" type="number" inputmode="decimal" min="0" step="1" placeholder="Ej. 350"><button id="bSave" class="btn sm" type="button">Guardar</button></div></div>
 </section>
 
-<!-- LISTA -->
+<!-- ============ LISTA ============ -->
 <section class="view" id="v-lista" hidden>
-  <h2>Mi lista habitual</h2>
-  <div class="panel">
-    <input id="lSearch" type="search" placeholder="Añadir producto: leche, huevos, aceite…" autocomplete="off">
+  <div class="head"><div><h1>Mi lista</h1><div class="sub" id="listSub">Tu compra habitual</div></div></div>
+  <div class="card">
+    <input id="lSearch" type="search" placeholder="Añadir: leche, huevos, aceite…" autocomplete="off">
     <div class="suggest" id="lSuggest" hidden></div>
     <ul class="list" id="lList"></ul>
   </div>
-  <div class="panel">
-    <div class="row" style="justify-content:space-between">
-      <h3>Dónde sale más barata</h3>
-      <div class="seg" role="group" aria-label="Modo">
-        <button type="button" id="mTienda" aria-pressed="true">En tienda</button>
-        <button type="button" id="mOnline" aria-pressed="false">Online</button>
-      </div>
+
+  <div class="label">Dónde sale más barata</div>
+  <div class="card">
+    <div class="seg" role="group" aria-label="Cómo compras">
+      <button type="button" id="mTienda" aria-pressed="true">En tienda</button>
+      <button type="button" id="mOnline" aria-pressed="false">Online</button>
     </div>
     <label class="row small muted"><input type="checkbox" id="onlyNear" style="width:auto"> Solo supers cerca de mi código postal</label>
-    <div class="ticket" id="cmpOut"></div>
-    <p class="small muted" id="cmpSplit"></p>
-    <div class="row"><button type="button" id="cmpRegister" class="ghost">Registrar la más barata en el presupuesto</button></div>
+    <div class="rank" id="cmpOut"></div>
+    <p class="note" id="cmpNote"></p>
+    <button class="btn block" type="button" id="cmpRegister"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>Registrar la más barata</button>
   </div>
   <p class="note" id="dataNote"></p>
 </section>
 
-<!-- BUSCAR -->
+<!-- ============ COMPARAR ============ -->
 <section class="view" id="v-buscar" hidden>
-  <h2>Comparar un producto</h2>
-  <div class="panel">
-    <input id="sQuery" type="search" placeholder="Buscar: yogur, atún, café…" autocomplete="off">
-    <select id="sCat"><option value="">Todas las categorías</option></select>
+  <div class="head"><div><h1>Comparar</h1><div class="sub" id="searchSub">Busca un producto</div></div></div>
+  <div class="card">
+    <input id="sQuery" type="search" placeholder="Yogur, atún, café…" autocomplete="off">
+    <div class="row"><select id="sCat" class="grow"><option value="">Todas las categorías</option></select>
+      <select id="sChain" class="grow"><option value="">Todas las cadenas</option></select></div>
   </div>
-  <div id="sOut" style="display:flex;flex-direction:column;gap:12px"></div>
+  <div id="sOut" style="display:flex;flex-direction:column;gap:14px"></div>
 </section>
 
-<!-- SALUD -->
+<!-- ============ SALUD ============ -->
 <section class="view" id="v-salud" hidden>
-  <h2>Analizar producto</h2>
-  <div class="panel">
-    <div class="row">
-      <button type="button" id="scanBtn">Escanear código de barras</button>
-      <button type="button" id="scanStop" class="ghost" hidden>Parar</button>
-    </div>
+  <div class="head"><div><h1>Salud</h1><div class="sub">Escanea y descubre qué comes</div></div></div>
+  <div class="card hero">
+    <div class="eyebrow">Escáner</div>
     <video id="scanVideo" playsinline muted hidden></video>
-    <div class="row"><input id="eanInput" class="grow" inputmode="numeric" placeholder="O escribe el código (EAN)"><button type="button" id="eanGo" class="ghost">Analizar</button></div>
-    <p class="small muted" id="scanMsg">Datos de Open Food Facts. La puntuación se calcula con Nutri-Score, aditivos y si es ecológico.</p>
+    <button type="button" class="btn block" id="scanBtn"><svg viewBox="0 0 24 24"><path d="M4 7V5h3M17 5h3v2M20 17v2h-3M7 19H4v-2"/><path d="M8 9v6M11 9v6M14 9v6M17 9v6"/></svg>Escanear código de barras</button>
+    <button type="button" class="btn ghost block" id="scanStop" hidden>Parar cámara</button>
+    <div class="row"><input id="eanInput" class="grow" inputmode="numeric" placeholder="O escribe el código"><button type="button" id="eanGo" class="btn sm">Analizar</button></div>
+    <p class="note" id="scanMsg">Datos de Open Food Facts. Puntuación con Nutri-Score, aditivos y si es ecológico.</p>
   </div>
   <div id="hResult"></div>
-  <div class="panel">
-    <div class="row" style="justify-content:space-between"><h3>Mi registro</h3>
-      <label class="row small muted"><input type="checkbox" id="hOnlyGood" style="width:auto"> Solo saludables</label></div>
-    <ul class="list" id="hList"></ul>
-  </div>
+  <div class="row between"><div class="label" style="margin:0">Mi registro</div>
+    <label class="row small muted"><input type="checkbox" id="hOnlyGood" style="width:auto"> Solo sanos</label></div>
+  <div class="card"><ul class="list" id="hList"></ul></div>
 </section>
 
-<!-- SUPERS -->
+<!-- ============ SUPERS ============ -->
 <section class="view" id="v-supers" hidden>
-  <h2>Supermercados cerca</h2>
-  <div class="panel">
-    <h3>Tu código postal</h3>
-    <div class="row"><input id="cpInput" class="grow" inputmode="numeric" maxlength="5" placeholder="Ej. 08001"><button type="button" id="cpGo">Buscar</button></div>
-    <div class="row"><span class="small muted">Radio</span>
+  <div class="head"><div><h1>Supers</h1><div class="sub">Los que tienes cerca</div></div></div>
+  <div class="card">
+    <div class="eyebrow">Tu código postal</div>
+    <div class="row"><input id="cpInput" class="grow" inputmode="numeric" maxlength="5" placeholder="Ej. 08001">
       <select id="cpRadius" style="width:auto"><option value="1500">1,5 km</option><option value="3000" selected>3 km</option><option value="6000">6 km</option></select></div>
-    <p class="small muted" id="nearMsg">Busca en OpenStreetMap los supermercados de tu zona.</p>
+    <button type="button" id="cpGo" class="btn block"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg>Buscar supermercados</button>
+    <p class="note" id="nearMsg">Busca en OpenStreetMap los supermercados de tu zona.</p>
   </div>
-  <div class="panel"><h3>Cadenas en tu zona</h3><div class="row" id="nearChains"></div></div>
-  <div class="panel"><h3>Tiendas</h3><ul class="list" id="nearList"></ul></div>
+  <div class="label">Cadenas en tu zona</div>
+  <div class="card"><div class="row" id="nearChains"></div></div>
+  <div class="label">Tiendas</div>
+  <div class="card"><ul class="list" id="nearList"></ul></div>
 </section>
 </main>
 
 <nav class="tabs" aria-label="Secciones">
-  <button type="button" data-v="presupuesto" aria-current="page"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 15h2"/></svg>Presupuesto</button>
-  <button type="button" data-v="lista"><svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></svg>Lista</button>
-  <button type="button" data-v="buscar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg>Comparar</button>
-  <button type="button" data-v="salud"><svg viewBox="0 0 24 24"><path d="M4 7V5h3M17 5h3v2M20 17v2h-3M7 19H4v-2"/><path d="M8 9v6M11 9v6M14 9v6M17 9v6"/></svg>Salud</button>
+  <button type="button" data-v="hoy" aria-current="page"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/><rect x="8" y="13" width="4" height="3" rx=".5"/></svg>Hoy</button>
+  <button type="button" data-v="lista"><svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>Lista</button>
+  <button type="button" class="fab" data-v="salud" data-scan="1" aria-label="Escanear"><svg viewBox="0 0 24 24"><path d="M4 7V5h3M17 5h3v2M20 17v2h-3M7 19H4v-2"/><path d="M8 9v6M11 9v6M14 9v6M17 9v6"/></svg></button>
+  <button type="button" data-v="buscar"><svg viewBox="0 0 24 24"><path d="M6 20V11M12 20V4M18 20v-6"/></svg>Comparar</button>
   <button type="button" data-v="supers"><svg viewBox="0 0 24 24"><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg>Supers</button>
 </nav>
 
 <script>
 "use strict";
-/* ---------- Cadenas ---------- */
-// Envío: datos publicados en 2025 (revisar). null = consultar en la web.
+/* ================= Cadenas ================= */
 const CHAINS = {
-  mercadona:{name:"Mercadona", color:"#1E8B4E", ship:8.20, freeFrom:null, re:/mercadona/i, url:q=>"https://tienda.mercadona.es/search-results?query="+encodeURIComponent(q)},
-  carrefour:{name:"Carrefour", color:"#1A4FA0", ship:7.99, freeFrom:null, re:/carrefour/i, url:q=>"https://www.carrefour.es/?q="+encodeURIComponent(q)},
-  dia:{name:"Dia", color:"#D2232A", ship:4.99, freeFrom:100, re:/\bdia\b|día/i, url:q=>"https://www.dia.es/search?q="+encodeURIComponent(q)},
-  alcampo:{name:"Alcampo", color:"#E2001A", ship:null, freeFrom:null, re:/alcampo|auchan/i, url:q=>"https://www.compraonline.alcampo.es/search?q="+encodeURIComponent(q)},
-  eroski:{name:"Eroski", color:"#C8102E", ship:null, freeFrom:null, re:/eroski/i, url:q=>"https://supermercado.eroski.es/es/search/results/?q="+encodeURIComponent(q)}
+  mercadona:{name:"Mercadona", color:"#2FB36B", ship:8.20, freeFrom:null, re:/mercadona/i, home:"https://tienda.mercadona.es/"},
+  consum:{name:"Consum", color:"#FF8A3D", ship:null, freeFrom:null, re:/consum/i, home:"https://tienda.consum.es/"},
+  carrefour:{name:"Carrefour", color:"#4C8DFF", ship:7.99, freeFrom:null, re:/carrefour/i, home:"https://www.carrefour.es/supermercado/"},
+  dia:{name:"Dia", color:"#FF4D4D", ship:4.99, freeFrom:100, re:/\bdia\b|día/i, home:"https://www.dia.es/"},
+  alcampo:{name:"Alcampo", color:"#FF6F61", ship:null, freeFrom:null, re:/alcampo|auchan/i, home:"https://www.compraonline.alcampo.es/"},
+  eroski:{name:"Eroski", color:"#E04A6A", ship:null, freeFrom:null, re:/eroski/i, home:"https://supermercado.eroski.es/"}
 };
-const OTHER_CHAINS = [["lidl",/lidl/i,"Lidl"],["aldi",/aldi/i,"Aldi"],["consum",/consum/i,"Consum"],["bonpreu",/bon ?preu|esclat/i,"Bonpreu"],["condis",/condis/i,"Condis"],["caprabo",/caprabo/i,"Caprabo"],["ahorramas",/ahorram/i,"Ahorramás"],["bonarea",/bon ?àrea|bonarea/i,"bonÀrea"],["spar",/spar/i,"Spar"]];
+const OTHER = [["lidl",/lidl/i,"Lidl"],["aldi",/aldi/i,"Aldi"],["bonpreu",/bon ?preu|esclat/i,"Bonpreu"],["condis",/condis/i,"Condis"],["caprabo",/caprabo/i,"Caprabo"],["ahorramas",/ahorram/i,"Ahorramás"],["bonarea",/bon ?àrea|bonarea/i,"bonÀrea"],["spar",/spar/i,"Spar"]];
+const chainName = k => CHAINS[k]?.name || (OTHER.find(o=>o[0]===k)||[])[2] || (k==="otro"?"Otra tienda":k);
+const chainColor = k => CHAINS[k]?.color || "#5D5B78";
 
-/* ---------- Precios de EJEMPLO (se sustituyen por precios.json en la fase 2) ---------- */
-const SAMPLE = [
- ["Leche entera 1 L","Lácteos",[0.95,0.99,0.97,0.98,1.05]],
- ["Leche semidesnatada 6×1 L","Lácteos",[5.40,5.70,5.55,5.49,5.95]],
- ["Yogur natural 8 uds","Lácteos",[1.30,1.45,1.25,1.39,1.55]],
- ["Queso tierno lonchas 250 g","Lácteos",[2.60,2.85,2.69,2.75,2.99]],
- ["Mantequilla 250 g","Lácteos",[2.45,2.59,2.49,2.55,2.79]],
- ["Huevos L docena","Huevos",[2.85,2.99,2.79,2.95,3.15]],
- ["Pan de molde integral","Panadería",[1.35,1.49,1.29,1.45,1.59]],
- ["Barra de pan","Panadería",[0.55,0.60,0.49,0.59,0.65]],
- ["Aceite de oliva virgen extra 1 L","Despensa",[7.95,8.29,7.99,8.15,8.49]],
- ["Arroz redondo 1 kg","Despensa",[1.45,1.55,1.39,1.49,1.65]],
- ["Macarrones 1 kg","Despensa",[1.20,1.29,1.15,1.25,1.35]],
- ["Garbanzos cocidos 400 g","Despensa",[0.75,0.85,0.72,0.79,0.89]],
- ["Atún claro en aceite 3×80 g","Conservas",[3.10,3.35,2.99,3.25,3.49]],
- ["Tomate triturado 800 g","Conservas",[0.95,1.05,0.89,0.99,1.09]],
- ["Café molido natural 250 g","Desayuno",[2.90,3.15,2.85,3.05,3.25]],
- ["Copos de avena 500 g","Desayuno",[1.15,1.29,1.19,1.25,1.39]],
- ["Galletas tipo maría 800 g","Desayuno",[1.60,1.75,1.55,1.69,1.85]],
- ["Pechuga de pollo 1 kg","Carne",[6.99,7.49,7.19,7.25,7.69]],
- ["Carne picada mixta 500 g","Carne",[3.60,3.85,3.69,3.75,3.99]],
- ["Salmón fresco 300 g","Pescado",[5.50,5.95,null,5.79,6.15]],
- ["Merluza congelada 1 kg","Pescado",[6.80,7.15,6.95,6.99,7.35]],
- ["Plátano de Canarias 1 kg","Fruta y verdura",[2.29,2.49,2.39,2.35,2.59]],
- ["Manzana golden 1 kg","Fruta y verdura",[1.89,1.99,1.85,1.95,2.09]],
- ["Tomate pera 1 kg","Fruta y verdura",[1.99,2.15,1.95,2.09,2.25]],
- ["Patatas 3 kg","Fruta y verdura",[3.49,3.69,3.39,3.55,3.79]],
- ["Cebolla 2 kg","Fruta y verdura",[2.19,2.29,2.15,2.25,2.39]],
- ["Lechuga iceberg","Fruta y verdura",[0.99,1.09,0.95,1.05,1.15]],
- ["Agua mineral 6×1,5 L","Bebidas",[1.95,2.10,1.89,2.05,2.25]],
- ["Zumo de naranja 1 L","Bebidas",[1.35,1.49,1.29,1.45,1.55]],
- ["Papel higiénico 12 rollos","Hogar",[4.20,4.55,4.15,4.39,4.69]],
- ["Detergente líquido 40 lavados","Hogar",[5.50,5.99,5.45,5.79,6.19]],
- ["Gel de ducha 750 ml","Higiene",[1.60,1.79,1.55,1.69,1.89]]
-];
-const ORDER = ["mercadona","carrefour","dia","alcampo","eroski"];
-let CATALOG = SAMPLE.map((r,i)=>({id:"p"+i,name:r[0],cat:r[1],prices:Object.fromEntries(ORDER.map((c,j)=>[c,r[2][j]]))}));
-let DATA_SOURCE = "ejemplo"; let DATA_DATE = null;
-let DATA_CHAINS = ORDER.slice(); // cadenas con precios en los datos cargados
-const prepare = list => list.forEach(p => { p._n = norm(p.name + " " + (p.sub||"") + " " + p.cat); });
-const thumb = (p,n) => p.img ? `<img src="${esc(p.img)}" alt="" loading="lazy" width="${n}" height="${n}" style="width:${n}px;height:${n}px;object-fit:contain;border-radius:8px;background:#fff;flex:none">` : `<span style="width:${n}px;height:${n}px;border-radius:8px;background:var(--bg);flex:none"></span>`;
-const sizeOf = p => [p.pack, p.size].filter(Boolean).join(" · ");
+/* ================= Utilidades ================= */
+const $ = s => document.querySelector(s);
+const eur = n => (n==null||isNaN(n)) ? "—" : n.toLocaleString("es-ES",{minimumFractionDigits:2,maximumFractionDigits:2})+" €";
+const eur0 = n => (n==null||isNaN(n)) ? "—" : Math.round(n).toLocaleString("es-ES")+" €";
+const esc = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm = s => String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+const monthKey = (d=new Date()) => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
+function toast(t){const d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2400)}
+const thumb = (p,n) => p&&p.img ? `<img class="thumb" src="${esc(p.img)}" alt="" loading="lazy" width="${n}" height="${n}" style="width:${n}px;height:${n}px">` : `<span class="thumb empty" style="width:${n}px;height:${n}px"></span>`;
+const unitLabel = u => u==="kg"?"kg":u==="l"?"L":"ud";
+const refTxt = p => p.unitPrice!=null && p.unit ? `${eur(p.unitPrice)}/${unitLabel(p.unit)}` : "";
 
-/* ---------- Almacenamiento ---------- */
+/* ================= Estado ================= */
 const store = {
   get(k,d){try{const v=localStorage.getItem("cj_"+k);return v?JSON.parse(v):d}catch(e){return d}},
   set(k,v){try{localStorage.setItem("cj_"+k,JSON.stringify(v))}catch(e){}}
 };
 const S = {
-  budget: store.get("budget",350),
-  purchases: store.get("purchases",[]),
-  list: store.get("list",[{id:"p0",q:2},{id:"p5",q:1},{id:"p8",q:1},{id:"p21",q:1},{id:"p6",q:1},{id:"p12",q:1}]),
-  health: store.get("health",[]),
-  cp: store.get("cp",""),
-  near: store.get("near",null),
-  mode:"tienda"
+  budget: store.get("budget",350), purchases: store.get("purchases",[]), list: store.get("list",[]),
+  health: store.get("health",[]), cp: store.get("cp",""), near: store.get("near",null),
+  match: store.get("match",{}), mode:"tienda"
 };
 const save = k => store.set(k,S[k]);
 
-/* ---------- Utilidades ---------- */
-const $ = s => document.querySelector(s);
-const eur = n => (n==null||isNaN(n)) ? "—" : n.toLocaleString("es-ES",{minimumFractionDigits:2,maximumFractionDigits:2})+" €";
-const esc = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const norm = s => String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
-const byId = id => CATALOG.find(p=>p.id===id);
-function toast(t){const d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2200)}
-const monthKey = (d=new Date()) => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
+/* ================= Datos de precios ================= */
+let PRODUCTS=[], BY_ID=new Map(), BY_CHAIN={}, META={chains:{},updated:null}, LOADED=false, LOAD_ERR=false;
+const STOP = new Set("de del la el los las y con sin en para al a o pack brik brick botella bote paquete bolsa lata tarro garrafa caja bandeja malla barqueta tarrina vaso frasco envase hacendado consum deliplus bosque verde compy carrefour dia alcampo eroski auchan granel aprox pieza piezas unidad unidades ud uds g kg ml l cl x formato familiar docena media".split(" "));
+function prep(p){
+  p._n = norm(p.name+" "+(p.sub||"")+" "+(p.cat||"")+" "+(p.brand||""));
+  p._t = [...new Set(norm(p.name).split(/[^a-z0-9ñ]+/).filter(w=>w.length>1 && !STOP.has(w) && !/^\d/.test(w)))];
+}
+function fromV1(j){ // compatibilidad con el formato antiguo (solo Mercadona)
+  return {updated:j.updated, chains:{mercadona:j.chains?.mercadona||{}}, products:j.products.map(p=>{
+    const ref=(p.ref?.mercadona||"").match(/([\d,]+)\s*€\/(\w+)/);
+    const u=ref?norm(ref[2]):""; const unit=u==="kg"?"kg":u==="l"?"l":ref?"ud":null;
+    return {id:p.id,chain:"mercadona",name:p.name,cat:p.cat,sub:p.sub,img:p.img,price:p.prices.mercadona,prev:p.prev?.mercadona||null,
+      size:p.size||"",unit,unitPrice:ref?Number(ref[1].replace(",",".")):null,url:p.url?.mercadona||""};})};
+}
+async function loadPrices(){
+  try{
+    const r=await fetch("precios.json",{cache:"no-cache"}); if(!r.ok) throw 0;
+    let j=await r.json(); if(j.version!==2) j=fromV1(j);
+    PRODUCTS=j.products.filter(p=>CHAINS[p.chain]&&p.price>0);
+    PRODUCTS.forEach(prep);
+    BY_ID=new Map(PRODUCTS.map(p=>[p.id,p])); BY_CHAIN={};
+    PRODUCTS.forEach(p=>(BY_CHAIN[p.chain]||(BY_CHAIN[p.chain]=[])).push(p));
+    META={chains:j.chains||{},updated:j.updated}; LOADED=true;
+    const before=S.list.length; S.list=S.list.filter(it=>BY_ID.has(it.id)); if(S.list.length!==before) save("list");
+  }catch(e){LOAD_ERR=true}
+  fillFilters(); renderAll();
+}
+const DATA_CHAINS = () => Object.keys(BY_CHAIN);
 
-/* ---------- Navegación ---------- */
-document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.v)));
+/* ============ Equivalentes entre cadenas ============ */
+// Busca en otra cadena el producto del mismo tipo (mismas palabras clave) y tamaño parecido.
+function candidates(p, chain, limit=6){
+  if(p.chain===chain) return [{p,score:1}];
+  const pool=BY_CHAIN[chain]||[]; const T=p._t; if(!T.length) return [];
+  const need = T.length<=2 ? T.length : Math.ceil(T.length*0.67);
+  const out=[];
+  for(const c of pool){
+    if(p.unit && c.unit && p.unit!==c.unit) continue;
+    if(p.qty && c.qty){const r=c.qty/p.qty; if(r<0.45||r>2.2) continue;}
+    let hit=0; for(const t of T) if(c._t.includes(t)) hit++;
+    if(hit<need) continue;
+    const score = 0.7*hit/T.length + 0.3*hit/Math.max(c._t.length,1);
+    out.push({p:c,score});
+  }
+  out.sort((a,b)=>b.score-a.score);
+  const top=out[0]?.score??0;
+  const tier=out.filter(x=>x.score>=top-0.15).sort((a,b)=>eqCost(p,a.p)-eqCost(p,b.p));
+  const rest=out.filter(x=>x.score<top-0.15);
+  return tier.concat(rest).slice(0,limit);
+}
+// Coste equivalente: si los tamaños difieren, se escala al tamaño del producto de la lista.
+function eqCost(base, m){
+  if(base.chain!==m.chain && base.qty && m.unitPrice!=null && base.unit===m.unit) return m.unitPrice*base.qty;
+  return m.price;
+}
+function matchFor(p, chain){
+  const key=p.id+"|"+chain, forced=S.match[key];
+  if(forced==="none") return null;
+  if(forced && BY_ID.has(forced)) return BY_ID.get(forced);
+  return candidates(p,chain,1)[0]?.p || null;
+}
+
+/* ================= Navegación ================= */
 function show(v){
   document.querySelectorAll("section.view").forEach(s=>s.hidden = s.id!=="v-"+v);
-  document.querySelectorAll("nav.tabs button").forEach(b=>{if(b.dataset.v===v)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+  document.querySelectorAll("nav.tabs button").forEach(b=>{if(b.dataset.v===v && !b.classList.contains("fab"))b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
   window.scrollTo(0,0);
   if(v==="lista") renderCompare();
+  if(v!=="salud") stopScan();
 }
+document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>{show(b.dataset.v); if(b.dataset.scan) startScan();}));
+document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.go)));
 $("#cpChip").addEventListener("click",()=>show("supers"));
 
-/* ---------- Presupuesto ---------- */
+/* ================= HOY / Presupuesto ================= */
 function renderBudget(){
-  const mk = monthKey();
-  const items = S.purchases.filter(p=>p.date.startsWith(mk)).sort((a,b)=>b.date.localeCompare(a.date));
-  const spent = items.reduce((a,p)=>a+p.amount,0);
-  const remain = S.budget - spent;
-  $("#bRemain").textContent = eur(remain);
-  $("#bRemain").style.color = remain<0 ? "var(--bad)" : "";
-  $("#bSpent").textContent = eur(spent)+" / "+eur(S.budget);
-  const pct = S.budget>0 ? Math.min(100,spent/S.budget*100) : 0;
-  $("#bBar").classList.toggle("over",remain<0);
-  $("#bBar i").style.width = pct+"%";
-  const now=new Date(), days=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(), left=days-now.getDate()+1;
-  $("#bHint").textContent = remain>=0 ? `Puedes gastar unos ${eur(remain/left)} al día durante los ${left} días que quedan de mes.` : `Te has pasado ${eur(-remain)} este mes.`;
-  $("#bAmount").value = S.budget;
-  $("#pList").innerHTML = items.length ? items.map(p=>`<li><span class="dot" style="background:${CHAINS[p.store]?.color||"var(--muted)"}"></span><div class="grow"><div class="name">${esc(CHAINS[p.store]?.name||p.store)}</div><div class="small muted">${new Date(p.date).toLocaleDateString("es-ES",{day:"numeric",month:"short"})}${p.note?" · "+esc(p.note):""}</div></div><span class="num">${eur(p.amount)}</span><button class="icon" type="button" aria-label="Borrar" data-del="${p.id}">✕</button></li>`).join("") : `<li class="muted small">Aún no hay compras este mes. Añade la primera arriba o registra la cesta desde la lista.</li>`;
+  const now=new Date(), mk=monthKey();
+  const items=S.purchases.filter(p=>p.date.startsWith(mk)).sort((a,b)=>b.date.localeCompare(a.date));
+  const spent=items.reduce((a,p)=>a+p.amount,0), remain=S.budget-spent;
+  const mname=now.toLocaleDateString("es-ES",{month:"long"});
+  $("#hoySub").textContent=now.toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long"});
+  $("#bMonth").textContent="Presupuesto de "+mname;
+  $("#bRemain").textContent=eur0(remain);
+  $("#bRemain").classList.toggle("grad-text",remain>=0); $("#bRemain").style.color=remain<0?"var(--red)":"";
+  const pct=S.budget>0?Math.min(100,spent/S.budget*100):0;
+  $("#bBar").classList.toggle("over",remain<0); $("#bBar i").style.width=pct+"%";
+  const days=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(), left=days-now.getDate()+1;
+  $("#bHint").textContent= remain>=0 ? `Unos ${eur(remain/left)} al día durante ${left} días · ${eur0(spent)} de ${eur0(S.budget)}` : `Te has pasado ${eur(-remain)} este mes`;
+  $("#tSpent").textContent=eur0(spent); $("#tCount").textContent=items.length;
+  $("#tSaved").textContent=eur0(items.reduce((a,p)=>a+(p.saved||0),0));
+  $("#tHealthy").textContent=S.health.filter(h=>h.score>=50).length;
+  $("#bAmount").value=S.budget;
+  // semana
+  const dow=(now.getDay()+6)%7, monday=new Date(now); monday.setDate(now.getDate()-dow);
+  const days7=[...Array(7)].map((_,i)=>{const d=new Date(monday);d.setDate(monday.getDate()+i);return d});
+  const has=d=>S.purchases.some(p=>p.date.slice(0,10)===d.toISOString().slice(0,10)||new Date(p.date).toDateString()===d.toDateString());
+  $("#week").innerHTML=days7.map((d,i)=>`<div><div class="d ${i===dow?"today":""}">${"LMXJVSD"[i]}</div><div class="c ${has(d)?"on":""} ${i===dow?"today":""}">${has(d)?'<svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>':"•"}</div></div>`).join("");
+  $("#pList").innerHTML=items.length?items.slice(0,12).map(p=>`<li><span class="dot" style="background:${chainColor(p.store)};width:12px;height:12px"></span><div class="grow"><div class="name">${esc(chainName(p.store))}</div><div class="small muted">${new Date(p.date).toLocaleDateString("es-ES",{weekday:"short",day:"numeric",month:"short"})}${p.note?" · "+esc(p.note):""}</div></div><b class="num">${eur(p.amount)}</b><button class="qty" style="padding:0" type="button" aria-label="Borrar" data-del="${p.id}"><span style="width:30px;line-height:30px">✕</span></button></li>`).join("")
+    :`<li class="empty-state">Aún no hay compras este mes.</li>`;
 }
-$("#pStore").innerHTML = Object.entries(CHAINS).map(([k,c])=>`<option value="${k}">${c.name}</option>`).join("")+OTHER_CHAINS.map(o=>`<option value="${o[0]}">${o[2]}</option>`).join("")+`<option value="otro">Otra tienda</option>`;
+$("#pStore").innerHTML=Object.keys(CHAINS).map(k=>`<option value="${k}">${CHAINS[k].name}</option>`).join("")+OTHER.map(o=>`<option value="${o[0]}">${o[2]}</option>`).join("")+`<option value="otro">Otra tienda</option>`;
 $("#bSave").addEventListener("click",()=>{const v=parseFloat($("#bAmount").value);if(v>=0){S.budget=v;save("budget");renderBudget();toast("Presupuesto guardado")}});
-$("#pAdd").addEventListener("click",()=>{const v=parseFloat($("#pAmount").value);if(!(v>0)){toast("Escribe un importe");return}
+$("#pAdd").addEventListener("click",()=>{const v=parseFloat($("#pAmount").value);if(!(v>0)){toast("Escribe el importe");return}
   S.purchases.push({id:Date.now().toString(36),store:$("#pStore").value,amount:v,date:new Date().toISOString()});save("purchases");$("#pAmount").value="";renderBudget();toast("Compra añadida")});
-$("#pList").addEventListener("click",e=>{const id=e.target.dataset.del;if(!id)return;S.purchases=S.purchases.filter(p=>p.id!==id);save("purchases");renderBudget()});
+$("#pList").addEventListener("click",e=>{const b=e.target.closest("[data-del]");if(!b)return;S.purchases=S.purchases.filter(p=>p.id!==b.dataset.del);save("purchases");renderBudget()});
 
-/* ---------- Lista habitual ---------- */
+/* ================= LISTA ================= */
+function searchProducts(q, {cat="",chain=""}={}){
+  const words=norm(q).trim().split(/\s+/).filter(Boolean);
+  let hits=PRODUCTS.filter(p=>(!cat||p.cat===cat)&&(!chain||p.chain===chain)&&words.every(w=>p._n.includes(w)));
+  if(words.length){const w0=words[0];hits.sort((a,b)=>(norm(b.name).startsWith(w0)-norm(a.name).startsWith(w0))||((a.unitPrice??a.price)-(b.unitPrice??b.price)))}
+  return hits;
+}
 function renderList(){
-  $("#lList").innerHTML = S.list.length ? S.list.map(it=>{const p=byId(it.id);if(!p)return"";
-    return `<li>${thumb(p,44)}<div class="grow"><div class="name">${esc(p.name)}</div><div class="small muted">${esc(sizeOf(p)||p.cat)}</div></div>
-    <div class="qty"><button type="button" data-dec="${p.id}" aria-label="Menos">−</button><span class="num">${it.q}</span><button type="button" data-inc="${p.id}" aria-label="Más">+</button></div></li>`}).join("")
-    : `<li class="muted small">Tu lista está vacía. Busca arriba para añadir productos.</li>`;
+  $("#lList").innerHTML = S.list.length ? S.list.map(it=>{const p=BY_ID.get(it.id);if(!p)return"";
+    return `<li>${thumb(p,52)}<div class="grow"><div class="name">${esc(p.name)}</div><div class="small muted"><span class="dot" style="background:${chainColor(p.chain)}"></span> ${esc(CHAINS[p.chain].name)} · ${esc(p.size||p.sub||"")} · ${eur(p.price)}</div></div>
+    <div class="qty"><button type="button" data-dec="${p.id}" aria-label="Menos">−</button><span>${it.q}</span><button type="button" data-inc="${p.id}" aria-label="Más">+</button></div></li>`}).join("")
+    : `<li class="empty-state">${LOADED?"Busca arriba y añade lo que compras siempre.":"Cargando productos…"}</li>`;
+  $("#listSub").textContent = S.list.length ? `${S.list.reduce((a,i)=>a+i.q,0)} productos` : "Tu compra habitual";
 }
 $("#lSearch").addEventListener("input",()=>{
-  const q=norm($("#lSearch").value.trim()); const box=$("#lSuggest");
+  const q=$("#lSearch").value.trim(), box=$("#lSuggest");
   if(q.length<2){box.hidden=true;return}
-  const words=q.split(/\s+/);
-  const hits=CATALOG.filter(p=>words.every(w=>p._n.includes(w))).slice(0,8);
-  box.innerHTML = hits.length ? hits.map(p=>{const best=Math.min(...Object.values(p.prices).filter(v=>v!=null));
-    return `<button type="button" data-add="${p.id}" style="display:flex;gap:10px;align-items:center">${thumb(p,36)}<span style="min-width:0">${esc(p.name)} <span class="muted small">· ${esc(sizeOf(p)||p.cat)} · <span class="num">${eur(best)}</span></span></span></button>`}).join("") : `<button type="button" disabled>Sin resultados en el catálogo</button>`;
+  const hits=searchProducts(q).slice(0,8);
+  box.innerHTML=hits.length?hits.map(p=>`<button type="button" data-add="${p.id}">${thumb(p,40)}<span class="grow">${esc(p.name)}<br><span class="small muted"><span class="dot" style="background:${chainColor(p.chain)}"></span> ${CHAINS[p.chain].name} · ${esc(p.size||"")} · <b class="num" style="color:var(--ink)">${eur(p.price)}</b></span></span></button>`).join(""):`<button type="button" disabled>Sin resultados</button>`;
   box.hidden=false;
 });
-$("#lSuggest").addEventListener("click",e=>{const b=e.target.closest("[data-add]");if(!b)return;const id=b.dataset.add;
-  const ex=S.list.find(i=>i.id===id); ex?ex.q++:S.list.push({id,q:1}); save("list");
-  $("#lSearch").value="";$("#lSuggest").hidden=true;renderList();renderCompare();});
+$("#lSuggest").addEventListener("click",e=>{const b=e.target.closest("[data-add]");if(!b)return;addToList(b.dataset.add);$("#lSearch").value="";$("#lSuggest").hidden=true;});
+function addToList(id){const ex=S.list.find(i=>i.id===id);ex?ex.q++:S.list.push({id,q:1});save("list");renderList();renderCompare();toast("Añadido a tu lista")}
 $("#lList").addEventListener("click",e=>{const inc=e.target.dataset.inc,dec=e.target.dataset.dec;
-  if(inc){S.list.find(i=>i.id===inc).q++}
-  if(dec){const it=S.list.find(i=>i.id===dec);it.q--; if(it.q<=0)S.list=S.list.filter(i=>i!==it)}
+  if(inc)S.list.find(i=>i.id===inc).q++;
+  if(dec){const it=S.list.find(i=>i.id===dec);it.q--;if(it.q<=0)S.list=S.list.filter(i=>i!==it)}
   if(inc||dec){save("list");renderList();renderCompare()}});
-$("#mTienda").addEventListener("click",()=>{S.mode="tienda";$("#mTienda").setAttribute("aria-pressed","true");$("#mOnline").setAttribute("aria-pressed","false");renderCompare()});
-$("#mOnline").addEventListener("click",()=>{S.mode="online";$("#mOnline").setAttribute("aria-pressed","true");$("#mTienda").setAttribute("aria-pressed","false");renderCompare()});
+function setMode(m){S.mode=m;$("#mTienda").setAttribute("aria-pressed",m==="tienda");$("#mOnline").setAttribute("aria-pressed",m==="online");renderCompare()}
+$("#mTienda").addEventListener("click",()=>setMode("tienda"));$("#mOnline").addEventListener("click",()=>setMode("online"));
 $("#onlyNear").addEventListener("change",renderCompare);
+const shipping=(c,sub)=>{const k=CHAINS[c];if(k.ship==null)return null;if(k.freeFrom!=null&&sub>=k.freeFrom)return 0;return k.ship};
 
-function shippingFor(chain,subtotal){const c=CHAINS[chain];if(c.ship==null)return null;if(c.freeFrom!=null&&subtotal>=c.freeFrom)return 0;return c.ship}
-let lastBest=null;
+let lastRows=[];
 function renderCompare(){
-  const out=$("#cmpOut"); lastBest=null;
-  $("#dataNote").textContent = DATA_SOURCE==="ejemplo" ? "Precios de ejemplo para probar la app. Los precios reales se cargarán cuando esté listo precios.json." : `Precios reales de la tienda online (${DATA_CHAINS.map(c=>CHAINS[c].name).join(", ")}), actualizados el ${new Date(DATA_DATE).toLocaleDateString("es-ES",{day:"numeric",month:"long"})}. Pueden variar en la tienda física.`;
-  if(!S.list.length){out.innerHTML=`<p class="muted small">Añade productos para comparar.</p>`;$("#cmpSplit").textContent="";return}
-  let chains=DATA_CHAINS.slice();
-  const noData=Object.keys(CHAINS).filter(c=>!DATA_CHAINS.includes(c));
+  const out=$("#cmpOut"); lastRows=[];
+  $("#dataNote").textContent = LOADED ? `Precios de las tiendas online de ${DATA_CHAINS().map(c=>CHAINS[c].name).join(" y ")}, actualizados el ${new Date(META.updated).toLocaleDateString("es-ES",{day:"numeric",month:"long"})}. En tienda física pueden variar.` : LOAD_ERR ? "No se pudieron cargar los precios. Revisa la conexión." : "";
+  if(!LOADED){out.innerHTML=`<div class="loading"><span class="spin"></span>Cargando precios…</div>`;$("#cmpNote").textContent="";return}
+  if(!S.list.length){out.innerHTML=`<p class="empty-state">Añade productos para ver dónde te sale más barata.</p>`;$("#cmpNote").textContent="";return}
+  let chains=DATA_CHAINS();
   const onlyNear=$("#onlyNear").checked;
-  if(onlyNear){ if(!S.near){out.innerHTML=`<p class="muted small">Primero busca tu código postal en la pestaña Supers.</p>`;$("#cmpSplit").textContent="";return}
-    chains=chains.filter(c=>S.near.chains.includes(c)); }
-  const rows=chains.map(c=>{let sub=0,missing=[];
-    S.list.forEach(it=>{const p=byId(it.id);const pr=p?.prices[c];if(pr==null)missing.push(p?.name||"?");else sub+=pr*it.q});
-    const ship=S.mode==="online"?shippingFor(c,sub):0;
-    return {c,sub,ship,total:sub+(ship||0),missing,near:S.near?.chains.includes(c)}});
+  if(onlyNear){if(!S.near){out.innerHTML=`<p class="empty-state">Primero busca tu código postal en Supers.</p>`;return} chains=chains.filter(c=>S.near.chains.includes(c))}
+  const rows=chains.map(c=>{let sub=0;const items=[],missing=[];
+    for(const it of S.list){const p=BY_ID.get(it.id);if(!p)continue;const m=matchFor(p,c);
+      if(!m){missing.push(p);items.push({p,m:null,q:it.q});continue}
+      const cost=eqCost(p,m)*it.q; sub+=cost; items.push({p,m,q:it.q,cost});}
+    const ship=S.mode==="online"?shipping(c,sub):0;
+    return {c,sub,ship,total:sub+(ship||0),missing,items}});
   rows.sort((a,b)=>(a.missing.length-b.missing.length)||(a.total-b.total));
-  const best=rows.find(r=>!r.missing.length)||rows[0];
-  lastBest=best;
-  out.innerHTML = rows.length ? rows.map((r,i)=>{
+  lastRows=rows;
+  const best=rows[0], worst=rows.filter(r=>r.missing.length===best?.missing.length).slice(-1)[0];
+  out.innerHTML = rows.map((r,i)=>{
     const extra=[];
     if(S.mode==="online") extra.push(r.ship==null?"envío: consultar":r.ship===0?"envío gratis":"envío "+eur(r.ship));
-    if(r.missing.length) extra.push(`falta${r.missing.length>1?"n":""} ${r.missing.length}: ${r.missing.slice(0,2).join(", ")}${r.missing.length>2?"…":""}`);
-    if(S.near&&!onlyNear) extra.push(r.near?"cerca de ti":"no hay cerca");
-    const link = S.mode==="online" ? ` · <a href="${CHAINS[r.c].url("")}" target="_blank" rel="noopener">tienda online</a>` : "";
-    return `<div class="trow ${r===best?"best":""}"><span class="rank">${i+1}.</span><span class="who"><span class="dot" style="background:${CHAINS[r.c].color}"></span>${CHAINS[r.c].name}<small>${extra.join(" · ")}${link}</small></span><span class="tot">${eur(r.total)}</span></div>`}).join("")
-    + (onlyNear?"":noData.map(c=>`<div class="trow"><span class="rank">–</span><span class="who" style="color:var(--muted)"><span class="dot" style="background:${CHAINS[c].color}"></span>${CHAINS[c].name}<small>sin precios todavía</small></span><span class="tot muted">—</span></div>`).join(""))
-    : `<p class="muted small">No hay cadenas con precios cerca de tu código postal.</p>`;
-  // Mejor combinación tienda a tienda
-  let split=0,ok=true; S.list.forEach(it=>{const p=byId(it.id);if(!p){ok=false;return}const ps=chains.map(c=>p.prices[c]).filter(v=>v!=null);if(!ps.length)ok=false;else split+=Math.min(...ps)*it.q});
-  const save_=best?best.total-split:0;
-  $("#cmpSplit").textContent = ok&&rows.length>1 ? `Comprando cada producto donde es más barato: ${eur(split)}${save_>0.009?` (ahorras ${eur(save_)} más, pero vas a varias tiendas).`:"."}` : "";
+    if(r.missing.length) extra.push(`sin equivalente: ${r.missing.length}`);
+    if(S.near&&!onlyNear) extra.push(S.near.chains.includes(r.c)?"cerca de ti":"no hay cerca");
+    return `<details class="rk ${i===0?"best":""}"><summary><span class="dot" style="background:${CHAINS[r.c].color};width:12px;height:12px"></span>
+      <div class="grow"><div class="name">${CHAINS[r.c].name}${i===0?' <span class="chip pink">Más barata</span>':""}</div><div class="small muted">${extra.join(" · ")||"ver productos"}</div></div><span class="tot">${eur(r.total)}</span></summary>
+      <div class="items">${r.items.map(x=>{
+        const opts=candidates(x.p,r.c,6);
+        return `<div class="mi">${thumb(x.m,44)}<div class="grow"><div class="small" style="font-weight:700">${x.m?esc(x.m.name):"Sin equivalente"}</div><div class="small muted">${x.m?`${esc(x.m.size||"")}${x.m.chain!==x.p.chain&&x.p.qty&&x.m.qty&&x.m.qty!==x.p.qty?` · ajustado a ${esc(x.p.size)}`:""} · ×${x.q}`:esc(x.p.name)}</div>
+          ${x.p.chain!==r.c?`<select data-key="${x.p.id}|${r.c}" aria-label="Elegir equivalente">${opts.map(o=>`<option value="${o.p.id}" ${x.m&&o.p.id===x.m.id?"selected":""}>${esc(o.p.name)} · ${esc(o.p.size||"")} · ${eur(o.p.price)}</option>`).join("")}<option value="none" ${!x.m?"selected":""}>No lo compro aquí</option></select>`:""}</div>
+          <b class="num small">${x.m?eur(x.cost):"—"}</b></div>`}).join("")}
+        ${r.items[0]?.m?.url?`<a class="btn ghost sm" href="${esc(CHAINS[r.c].home)}" target="_blank" rel="noopener">Abrir tienda online de ${CHAINS[r.c].name}</a>`:""}</div></details>`}).join("");
+  const diff=worst&&best?worst.total-best.total:0;
+  $("#cmpNote").textContent = rows.length>1 ? (diff>0.009?`Comprando en ${CHAINS[best.c].name} te ahorras ${eur(diff)} frente a ${CHAINS[worst.c].name}. `:"")+"Los equivalentes se eligen por tipo de producto y tamaño; toca una cadena para revisarlos o cambiarlos." : "";
 }
-$("#cmpRegister").addEventListener("click",()=>{if(!lastBest)return;
-  S.purchases.push({id:Date.now().toString(36),store:lastBest.c,amount:Math.round(lastBest.total*100)/100,date:new Date().toISOString(),note:"lista habitual"});
-  save("purchases");renderBudget();toast(`Registrado: ${eur(lastBest.total)} en ${CHAINS[lastBest.c].name}`)});
+$("#cmpOut").addEventListener("change",e=>{const s=e.target.closest("select[data-key]");if(!s)return;S.match[s.dataset.key]=s.value;save("match");
+  const open=[...document.querySelectorAll("#cmpOut details")].map(d=>d.open);renderCompare();document.querySelectorAll("#cmpOut details").forEach((d,i)=>d.open=open[i]);});
+$("#cmpRegister").addEventListener("click",()=>{const b=lastRows[0];if(!b){toast("Añade productos a tu lista");return}
+  const worst=lastRows.filter(r=>r.missing.length===b.missing.length).slice(-1)[0];
+  S.purchases.push({id:Date.now().toString(36),store:b.c,amount:Math.round(b.total*100)/100,date:new Date().toISOString(),note:"lista habitual",saved:Math.max(0,Math.round(((worst?.total||b.total)-b.total)*100)/100)});
+  save("purchases");renderBudget();toast(`Registrado: ${eur(b.total)} en ${CHAINS[b.c].name}`)});
 
-/* ---------- Buscar producto ---------- */
-const cats=[...new Set(CATALOG.map(p=>p.cat))];
-function fillCats(){$("#sCat").innerHTML=`<option value="">Todas las categorías</option>`+[...new Set(CATALOG.map(p=>p.cat))].map(c=>`<option>${esc(c)}</option>`).join("")}
+/* ================= COMPARAR ================= */
+function fillFilters(){
+  const cats=[...new Set(PRODUCTS.map(p=>p.cat))].sort((a,b)=>a.localeCompare(b,"es"));
+  $("#sCat").innerHTML=`<option value="">Todas las categorías</option>`+cats.map(c=>`<option>${esc(c)}</option>`).join("");
+  $("#sChain").innerHTML=`<option value="">Todas las cadenas</option>`+DATA_CHAINS().map(c=>`<option value="${c}">${CHAINS[c].name}</option>`).join("");
+  $("#searchSub").textContent=LOADED?`${PRODUCTS.length.toLocaleString("es-ES")} productos de ${DATA_CHAINS().length} cadenas`:"Cargando productos…";
+}
 function renderSearch(){
-  const q=norm($("#sQuery").value.trim()), cat=$("#sCat").value;
-  const words=q?q.split(/\s+/):[];
-  let hits=CATALOG.filter(p=>(!cat||p.cat===cat)&&words.every(w=>p._n.includes(w)));
-  const total=hits.length;
-  if(!q&&!cat){$("#sOut").innerHTML=`<p class="muted">Escribe un producto o elige una categoría. Hay ${CATALOG.length.toLocaleString("es-ES")} productos en el catálogo.</p>`;return}
-  hits=hits.slice(0,30);
-  $("#sOut").innerHTML = hits.length ? (total>30?`<p class="small muted">Mostrando 30 de ${total.toLocaleString("es-ES")}. Afina la búsqueda para ver menos.</p>`:"")+hits.map(p=>{
-    const ps=Object.entries(p.prices).filter(([,v])=>v!=null).sort((a,b)=>a[1]-b[1]);
-    const min=ps[0]?.[1], max=ps[ps.length-1]?.[1];
-    return `<div class="panel"><div class="row" style="flex-wrap:nowrap;align-items:flex-start">
-    ${p.img?`<img src="${esc(p.img)}" alt="" loading="lazy" style="width:56px;height:56px;object-fit:contain;border-radius:8px;background:#fff;flex:none">`:""}
-    <div class="grow" style="min-width:0"><div class="name">${esc(p.name)}</div><div class="small muted">${esc([sizeOf(p),p.sub||p.cat].filter(Boolean).join(" · "))}${max>min?` · diferencia ${eur(max-min)}`:""}</div></div>
-    <button type="button" class="ghost" data-tolist="${p.id}" style="flex:none">+ Lista</button></div>
-    <div class="ticket">${ps.map(([c,v],i)=>{const was=p.prev?.[c];const ref=p.ref?.[c];const url=p.url?.[c]||CHAINS[c].url(p.name);
-      return `<div class="trow ${i===0&&ps.length>1?"best":""}"><span class="rank">${i+1}.</span><span class="who"><span class="dot" style="background:${CHAINS[c].color}"></span>${CHAINS[c].name}${was?' <span class="pill">Rebajado</span>':""}<small>${ref?esc(ref)+" · ":""}${S.near?(S.near.chains.includes(c)?"cerca de ti · ":"no hay cerca · "):""}<a href="${esc(url)}" target="_blank" rel="noopener">ver online</a></small></span><span class="tot">${was?`<s class="muted small">${eur(was)}</s> `:""}${eur(v)}</span></div>`}).join("")}</div></div>`}).join("")
-    : `<p class="muted">No hay resultados. Prueba con otra palabra.</p>`;
+  const q=$("#sQuery").value.trim(), cat=$("#sCat").value, chain=$("#sChain").value;
+  if(!LOADED){$("#sOut").innerHTML=`<div class="loading"><span class="spin"></span>Cargando productos…</div>`;return}
+  if(!q&&!cat){$("#sOut").innerHTML=`<p class="empty-state">Escribe un producto o elige una categoría.<br>Verás su precio y el equivalente en cada cadena.</p>`;return}
+  const all=searchProducts(q,{cat,chain}), hits=all.slice(0,25);
+  $("#sOut").innerHTML=(all.length>25?`<p class="small muted">Mostrando 25 de ${all.length.toLocaleString("es-ES")}. Afina la búsqueda.</p>`:"")+(hits.length?hits.map(p=>{
+    const eqs=DATA_CHAINS().filter(c=>c!==p.chain).map(c=>({c,m:candidates(p,c,1)[0]?.p})).filter(x=>x.m);
+    return `<div class="card pcard"><div class="ptop">${thumb(p,72)}<div class="grow"><div class="name">${esc(p.name)}</div>
+      <div class="small muted" style="margin-top:4px"><span class="chip"><span class="dot" style="background:${chainColor(p.chain)}"></span>${CHAINS[p.chain].name}</span> ${esc(p.size||"")}</div>
+      ${p.prev?'<span class="chip pink" style="margin-top:6px">Rebajado</span>':""}</div>
+      <div class="price">${p.prev?`<s>${eur(p.prev)}</s>`:""}${eur(p.price)}<div class="small muted" style="font-weight:600">${refTxt(p)}</div></div></div>
+      ${eqs.length?`<div class="eqs"><div class="small muted" style="font-weight:700;letter-spacing:.08em;text-transform:uppercase">Equivalente en</div>${eqs.map(x=>{const c=eqCost(p,x.m),d=c-p.price;
+        return `<div class="eq">${thumb(x.m,36)}<div class="grow"><span class="dot" style="background:${chainColor(x.c)}"></span> <b>${CHAINS[x.c].name}</b> <span class="muted small">· ${esc(x.m.name)} ${esc(x.m.size||"")}</span></div><b class="num" style="color:${d<-0.005?"var(--green)":d>0.005?"var(--muted)":"var(--ink)"}">${eur(c)}</b></div>`}).join("")}</div>`:""}
+      <div class="row"><button type="button" class="btn sm" data-tolist="${p.id}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Añadir a la lista</button>${p.url?`<a class="btn ghost sm" href="${esc(p.url)}" target="_blank" rel="noopener">Ver online</a>`:""}</div></div>`}).join(""):`<p class="empty-state">No hay resultados. Prueba con otra palabra.</p>`);
 }
-$("#sQuery").addEventListener("input",renderSearch);$("#sCat").addEventListener("change",renderSearch);
-$("#sOut").addEventListener("click",e=>{const id=e.target.dataset.tolist;if(!id)return;const ex=S.list.find(i=>i.id===id);ex?ex.q++:S.list.push({id,q:1});save("list");renderList();toast("Añadido a tu lista")});
+let sTimer; $("#sQuery").addEventListener("input",()=>{clearTimeout(sTimer);sTimer=setTimeout(renderSearch,180)});
+$("#sCat").addEventListener("change",renderSearch);$("#sChain").addEventListener("change",renderSearch);
+$("#sOut").addEventListener("click",e=>{const b=e.target.closest("[data-tolist]");if(b)addToList(b.dataset.tolist)});
 
-/* ---------- Salud (Open Food Facts) ---------- */
+/* ================= SALUD (Open Food Facts) ================= */
 const RISKY=["e249","e250","e251","e252","e320","e321","e171","e150c","e150d","e621","e950","e951","e955","e954","e407","e338","e339","e340","e341","e450","e451","e452","e102","e110","e122","e124","e129","e211"];
 function healthScore(p){
-  let nut;
-  const ns=(p.nutriscore_grade||"").toLowerCase();
-  if("abcde".includes(ns)&&ns) nut={a:100,b:75,c:50,d:25,e:0}[ns];
-  else if(p.nova_group) nut={1:85,2:65,3:40,4:15}[p.nova_group]??50;
-  else nut=50;
+  const ns=(p.nutriscore_grade||"").toLowerCase(); let nut;
+  if(ns&&"abcde".includes(ns)) nut={a:100,b:75,c:50,d:25,e:0}[ns];
+  else if(p.nova_group) nut={1:85,2:65,3:40,4:15}[p.nova_group]??50; else nut=50;
   const adds=(p.additives_tags||[]).map(a=>a.replace("en:",""));
   const risky=adds.filter(a=>RISKY.includes(a));
-  let addPts=Math.max(0,30-risky.length*12-(adds.length-risky.length)*3);
+  const addPts=Math.max(0,30-risky.length*12-(adds.length-risky.length)*3);
   const bio=(p.labels_tags||[]).some(l=>/organic|bio|ecologic/.test(l));
-  const score=Math.round(nut*0.6+addPts+(bio?10:0));
-  return {score:Math.max(0,Math.min(100,score)),risky,adds,bio,ns:ns||null};
+  return {score:Math.max(0,Math.min(100,Math.round(nut*0.6+addPts+(bio?10:0)))),risky,adds,bio,ns:ns||null};
 }
 const scoreLabel=s=>s>=75?["Excelente","var(--ns-a)"]:s>=50?["Bueno","var(--ns-b)"]:s>=25?["Mediocre","var(--ns-d)"]:["Malo","var(--ns-e)"];
 async function analyze(ean){
-  ean=String(ean).replace(/\D/g,"");
-  if(ean.length<8){toast("Código no válido");return}
+  ean=String(ean).replace(/\D/g,""); if(ean.length<8){toast("Código no válido");return}
   $("#scanMsg").textContent="Buscando "+ean+"…";
   try{
     const r=await fetch(`https://world.openfoodfacts.org/api/v2/product/${ean}.json?fields=product_name,product_name_es,brands,nutriscore_grade,nova_group,additives_tags,labels_tags,image_front_small_url,nutriments`);
     const j=await r.json();
     if(j.status!==1){$("#scanMsg").textContent="Este producto no está en Open Food Facts. Puedes añadirlo en openfoodfacts.org.";$("#hResult").innerHTML="";return}
-    const p=j.product, h=healthScore(p), [lab,col]=scoreLabel(h.score);
-    const item={ean,name:p.product_name_es||p.product_name||"Producto "+ean,brand:p.brands||"",img:p.image_front_small_url||"",score:h.score,ns:h.ns,nova:p.nova_group||null,risky:h.risky,adds:h.adds.length,bio:h.bio,date:new Date().toISOString()};
+    const p=j.product,h=healthScore(p),[lab,col]=scoreLabel(h.score);
+    const item={ean,name:p.product_name_es||p.product_name||"Producto "+ean,brand:p.brands||"",img:p.image_front_small_url||"",score:h.score,ns:h.ns,nova:p.nova_group||null,risky:h.risky,bio:h.bio,date:new Date().toISOString()};
     S.health=[item,...S.health.filter(x=>x.ean!==ean)].slice(0,300);save("health");
-    const n=p.nutriments||{};
-    $("#hResult").innerHTML=`<div class="panel"><div class="row" style="flex-wrap:nowrap">
-      ${item.img?`<img src="${esc(item.img)}" alt="" style="width:64px;height:64px;object-fit:contain;border-radius:8px;background:#fff">`:""}
-      <div class="grow"><div class="name">${esc(item.name)}</div><div class="small muted">${esc(item.brand)}</div></div>
-      <div class="score" style="background:${col}">${h.score}</div></div>
-      <p><b style="color:${col}">${lab}</b> · Nutri-Score <span class="ns ns${(h.ns||"x").toUpperCase()}">${h.ns||"?"}</span> · NOVA ${item.nova??"?"}${h.bio?' · <span class="pill">Ecológico</span>':""}</p>
-      <p class="small">${h.adds.length?`${h.adds.length} aditivos${h.risky.length?`, de riesgo: <b>${h.risky.map(a=>a.toUpperCase()).join(", ")}</b>`:", ninguno de riesgo"}`:"Sin aditivos"}</p>
-      <p class="small muted num">Por 100 g: azúcar ${n.sugars_100g??"?"} g · sal ${n.salt_100g??"?"} g · grasa sat. ${n["saturated-fat_100g"]??"?"} g</p></div>`;
-    $("#scanMsg").textContent="Guardado en tu registro.";renderHealth();
+    const n=p.nutriments||{}, inStore=PRODUCTS.filter(x=>x.ean===ean);
+    $("#hResult").innerHTML=`<div class="card"><div class="ptop">${thumb(item,72)}<div class="grow"><div class="name">${esc(item.name)}</div><div class="small muted">${esc(item.brand)}</div></div>
+      <div class="score" style="background:${col};box-shadow:0 0 22px ${col}">${h.score}</div></div>
+      <div class="row"><span class="chip" style="color:${col}">${lab}</span><span class="chip">Nutri-Score <span class="ns ns${(h.ns||"x").toUpperCase()}" style="width:20px;height:20px;font-size:12px">${h.ns||"?"}</span></span><span class="chip">NOVA ${item.nova??"?"}</span>${h.bio?'<span class="chip green">Ecológico</span>':""}</div>
+      <p class="small">${h.adds.length?`${h.adds.length} aditivos${h.risky.length?`, de riesgo: <b style="color:var(--red)">${h.risky.map(a=>a.toUpperCase()).join(", ")}</b>`:", ninguno de riesgo"}`:"Sin aditivos"}</p>
+      <p class="small muted num">Por 100 g · azúcar ${n.sugars_100g??"?"} g · sal ${n.salt_100g??"?"} g · grasa sat. ${n["saturated-fat_100g"]??"?"} g</p>
+      ${inStore.map(x=>`<div class="eq"><span class="dot" style="background:${chainColor(x.chain)}"></span><b>${CHAINS[x.chain].name}</b><span class="grow muted small">${esc(x.size||"")}</span><b class="num">${eur(x.price)}</b><button class="btn sm" type="button" data-tolist="${x.id}">+ Lista</button></div>`).join("")}</div>`;
+    $("#scanMsg").textContent="Guardado en tu registro.";renderHealth();renderBudget();
   }catch(e){$("#scanMsg").textContent="No se pudo conectar con Open Food Facts. Revisa la conexión."}
 }
+$("#hResult").addEventListener("click",e=>{const b=e.target.closest("[data-tolist]");if(b)addToList(b.dataset.tolist)});
 function renderHealth(){
-  const only=$("#hOnlyGood").checked;
-  const items=S.health.filter(x=>!only||x.score>=50);
-  $("#hList").innerHTML=items.length?items.map(x=>{const[lab,col]=scoreLabel(x.score);return `<li><span class="ns ns${(x.ns||"x").toUpperCase()}">${x.ns||"?"}</span><div class="grow"><div class="name">${esc(x.name)}</div><div class="small muted">${esc(x.brand)} · ${lab}</div></div><span class="num" style="color:${col};font-weight:700">${x.score}</span><button class="icon" type="button" data-hdel="${x.ean}" aria-label="Borrar">✕</button></li>`}).join("")
-    :`<li class="muted small">${only?"Ningún producto saludable aún.":"Escanea un producto para empezar tu registro."}</li>`;
+  const only=$("#hOnlyGood").checked, items=S.health.filter(x=>!only||x.score>=50);
+  $("#hList").innerHTML=items.length?items.map(x=>{const[lab,col]=scoreLabel(x.score);return `<li>${thumb(x,44)}<div class="grow"><div class="name">${esc(x.name)}</div><div class="small muted">${esc(x.brand)} · <span style="color:${col}">${lab}</span></div></div><span class="ns ns${(x.ns||"x").toUpperCase()}">${x.ns||"?"}</span><b class="num" style="color:${col};min-width:28px;text-align:right">${x.score}</b><button class="qty" style="padding:0" type="button" data-hdel="${x.ean}" aria-label="Borrar"><span style="width:30px;line-height:30px">✕</span></button></li>`}).join("")
+    :`<li class="empty-state">${only?"Ningún producto sano todavía.":"Escanea un producto para empezar."}</li>`;
 }
 $("#hOnlyGood").addEventListener("change",renderHealth);
-$("#hList").addEventListener("click",e=>{const id=e.target.dataset.hdel;if(id){S.health=S.health.filter(x=>x.ean!==id);save("health");renderHealth()}});
+$("#hList").addEventListener("click",e=>{const b=e.target.closest("[data-hdel]");if(b){S.health=S.health.filter(x=>x.ean!==b.dataset.hdel);save("health");renderHealth();renderBudget()}});
 $("#eanGo").addEventListener("click",()=>analyze($("#eanInput").value));
 $("#eanInput").addEventListener("keydown",e=>{if(e.key==="Enter")analyze($("#eanInput").value)});
-
-// Escáner: BarcodeDetector (Android/Chrome) o ZXing (iPhone/Safari)
-let stream=null, scanning=false, zxingCtl=null;
-function loadScript(src){return new Promise((ok,ko)=>{const s=document.createElement("script");s.src=src;s.onload=ok;s.onerror=ko;document.head.appendChild(s)})}
+let stream=null,scanning=false,zxingCtl=null;
+const loadScript=src=>new Promise((ok,ko)=>{const s=document.createElement("script");s.src=src;s.onload=ok;s.onerror=ko;document.head.appendChild(s)});
 async function startScan(){
-  const v=$("#scanVideo");
+  if(scanning)return; const v=$("#scanVideo");
   try{
     if("BarcodeDetector" in window){
       const det=new BarcodeDetector({formats:["ean_13","ean_8","upc_a","upc_e"]});
       stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}});
-      v.srcObject=stream;v.hidden=false;await v.play();scanning=true;toggleScanUI(true);
+      v.srcObject=stream;v.hidden=false;await v.play();scanning=true;scanUI(true);
       const loop=async()=>{if(!scanning)return;try{const c=await det.detect(v);if(c.length){stopScan();$("#eanInput").value=c[0].rawValue;analyze(c[0].rawValue);return}}catch(e){}requestAnimationFrame(loop)};loop();
     }else{
       if(!window.ZXingBrowser) await loadScript("https://unpkg.com/@zxing/browser@0.1.5/umd/zxing-browser.min.js");
-      const reader=new ZXingBrowser.BrowserMultiFormatReader();
-      v.hidden=false;toggleScanUI(true);scanning=true;
-      zxingCtl=await reader.decodeFromConstraints({video:{facingMode:"environment"}},v,(res)=>{if(res&&scanning){const t=res.getText();stopScan();$("#eanInput").value=t;analyze(t)}});
+      const reader=new ZXingBrowser.BrowserMultiFormatReader(); v.hidden=false;scanUI(true);scanning=true;
+      zxingCtl=await reader.decodeFromConstraints({video:{facingMode:"environment"}},v,res=>{if(res&&scanning){const t=res.getText();stopScan();$("#eanInput").value=t;analyze(t)}});
     }
     $("#scanMsg").textContent="Apunta al código de barras.";
-  }catch(e){stopScan();$("#scanMsg").textContent="No se pudo abrir la cámara. Da permiso a la cámara o escribe el código."}
+  }catch(e){stopScan();$("#scanMsg").textContent="No se pudo abrir la cámara. Dale permiso o escribe el código."}
 }
-function stopScan(){scanning=false;if(zxingCtl){try{zxingCtl.stop()}catch(e){}zxingCtl=null}if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$("#scanVideo").hidden=true;toggleScanUI(false)}
-function toggleScanUI(on){$("#scanBtn").hidden=on;$("#scanStop").hidden=!on}
+function stopScan(){scanning=false;if(zxingCtl){try{zxingCtl.stop()}catch(e){}zxingCtl=null}if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$("#scanVideo").hidden=true;scanUI(false)}
+function scanUI(on){$("#scanBtn").hidden=on;$("#scanStop").hidden=!on}
 $("#scanBtn").addEventListener("click",startScan);$("#scanStop").addEventListener("click",stopScan);
 
-/* ---------- Supers cercanos (OpenStreetMap) ---------- */
-function chainOf(name){for(const[k,c]of Object.entries(CHAINS))if(c.re.test(name))return k;for(const o of OTHER_CHAINS)if(o[1].test(name))return o[0];return null}
-const chainName=k=>CHAINS[k]?.name||(OTHER_CHAINS.find(o=>o[0]===k)||[])[2]||k;
+/* ================= SUPERS (OpenStreetMap) ================= */
+function chainOf(n){for(const[k,c]of Object.entries(CHAINS))if(c.re.test(n))return k;for(const o of OTHER)if(o[1].test(n))return o[0];return null}
+const haversine=(a,b,c,d)=>{const R=6371000,t=x=>x*Math.PI/180;const h=Math.sin(t(c-a)/2)**2+Math.cos(t(a))*Math.cos(t(c))*Math.sin(t(d-b)/2)**2;return 2*R*Math.asin(Math.sqrt(h))};
+const km=m=>m<1000?Math.round(m)+" m":(m/1000).toLocaleString("es-ES",{maximumFractionDigits:1})+" km";
 async function findNear(){
-  const cp=$("#cpInput").value.trim();
-  if(!/^\d{5}$/.test(cp)){toast("El código postal tiene 5 cifras");return}
-  const radius=$("#cpRadius").value;
-  $("#nearMsg").textContent="Buscando la zona "+cp+"…";
+  const cp=$("#cpInput").value.trim(); if(!/^\d{5}$/.test(cp)){toast("El código postal tiene 5 cifras");return}
+  const radius=$("#cpRadius").value; $("#nearMsg").innerHTML=`<span class="loading"><span class="spin"></span>Buscando la zona ${cp}…</span>`;
   try{
-    const g=await (await fetch(`https://nominatim.openstreetmap.org/search?postalcode=${cp}&country=es&format=json&limit=1`)).json();
+    const g=await(await fetch(`https://nominatim.openstreetmap.org/search?postalcode=${cp}&country=es&format=json&limit=1`)).json();
     if(!g.length){$("#nearMsg").textContent="No encuentro ese código postal.";return}
-    const lat=+g[0].lat, lon=+g[0].lon;
-    $("#nearMsg").textContent="Buscando supermercados…";
+    const lat=+g[0].lat,lon=+g[0].lon;
     const q=`[out:json][timeout:25];nwr["shop"="supermarket"](around:${radius},${lat},${lon});out center tags;`;
-    const o=await (await fetch("https://overpass-api.de/api/interpreter",{method:"POST",body:"data="+encodeURIComponent(q),headers:{"Content-Type":"application/x-www-form-urlencoded"}})).json();
-    const shops=o.elements.map(e=>{const la=e.lat??e.center?.lat, lo=e.lon??e.center?.lon;const nm=e.tags.brand||e.tags.name||"Supermercado";
-      return {name:e.tags.name||nm,brand:nm,chain:chainOf(nm+" "+(e.tags.name||"")),dist:haversine(lat,lon,la,lo),addr:[e.tags["addr:street"],e.tags["addr:housenumber"]].filter(Boolean).join(" ")}}).sort((a,b)=>a.dist-b.dist);
-    S.cp=cp;S.near={cp,date:new Date().toISOString(),shops:shops.slice(0,60),chains:[...new Set(shops.map(s=>s.chain).filter(Boolean))]};
-    save("cp");save("near");renderNear();renderCompare();
+    const o=await(await fetch("https://overpass-api.de/api/interpreter",{method:"POST",body:"data="+encodeURIComponent(q),headers:{"Content-Type":"application/x-www-form-urlencoded"}})).json();
+    const shops=o.elements.map(e=>{const la=e.lat??e.center?.lat,lo=e.lon??e.center?.lon,nm=e.tags.brand||e.tags.name||"Supermercado";
+      return {name:e.tags.name||nm,chain:chainOf(nm+" "+(e.tags.name||"")),dist:haversine(lat,lon,la,lo),addr:[e.tags["addr:street"],e.tags["addr:housenumber"]].filter(Boolean).join(" ")}}).sort((a,b)=>a.dist-b.dist);
+    S.cp=cp;S.near={cp,shops:shops.slice(0,60),chains:[...new Set(shops.map(s=>s.chain).filter(Boolean))]};save("cp");save("near");renderNear();renderCompare();
   }catch(e){$("#nearMsg").textContent="No se pudo consultar OpenStreetMap. Prueba de nuevo en un momento."}
 }
-function haversine(a,b,c,d){const R=6371000,t=x=>x*Math.PI/180;const h=Math.sin(t(c-a)/2)**2+Math.cos(t(a))*Math.cos(t(c))*Math.sin(t(d-b)/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
-const km=m=>m<1000?Math.round(m)+" m":(m/1000).toLocaleString("es-ES",{maximumFractionDigits:1})+" km";
 function renderNear(){
-  $("#cpChip").textContent="CP "+(S.cp||"—");
-  $("#cpInput").value=S.cp||"";
-  if(!S.near){$("#nearChains").innerHTML=`<span class="muted small">Sin buscar todavía.</span>`;$("#nearList").innerHTML="";return}
+  $("#cpChip").textContent="📍 "+(S.cp||"Tu CP"); $("#cpInput").value=S.cp||"";
+  if(!S.near){$("#nearChains").innerHTML=`<span class="muted small">Busca tu código postal.</span>`;$("#nearList").innerHTML=`<li class="empty-state">Sin buscar todavía.</li>`;return}
   $("#nearMsg").textContent=`${S.near.shops.length} supermercados cerca de ${S.near.cp}.`;
-  const all=[...new Set(S.near.shops.map(s=>s.chain).filter(Boolean))];
-  $("#nearChains").innerHTML=all.length?all.map(c=>`<span class="pill ${CHAINS[c]?"":"off"}">${esc(chainName(c))}${CHAINS[c]?"":" · sin precios"}</span>`).join(""):`<span class="muted small">Ninguna cadena reconocida.</span>`;
-  $("#nearList").innerHTML=S.near.shops.slice(0,25).map(s=>`<li><span class="dot" style="background:${CHAINS[s.chain]?.color||"var(--muted)"}"></span><div class="grow"><div class="name">${esc(s.name)}</div><div class="small muted">${esc(s.addr||"Dirección no disponible")}</div></div><span class="num small">${km(s.dist)}</span></li>`).join("")||`<li class="muted small">No hay supermercados en ese radio.</li>`;
+  $("#nearChains").innerHTML=S.near.chains.length?S.near.chains.map(c=>`<span class="chip ${BY_CHAIN[c]?"pink":"off"}"><span class="dot" style="background:${chainColor(c)}"></span>${esc(chainName(c))}${BY_CHAIN[c]?"":" · sin precios"}</span>`).join(""):`<span class="muted small">Ninguna cadena reconocida.</span>`;
+  $("#nearList").innerHTML=S.near.shops.slice(0,25).map(s=>`<li><span class="dot" style="background:${chainColor(s.chain)};width:12px;height:12px"></span><div class="grow"><div class="name">${esc(s.name)}</div><div class="small muted">${esc(s.addr||"Dirección no disponible")}</div></div><span class="chip num">${km(s.dist)}</span></li>`).join("")||`<li class="empty-state">No hay supermercados en ese radio.</li>`;
 }
-$("#cpGo").addEventListener("click",findNear);
-$("#cpInput").addEventListener("keydown",e=>{if(e.key==="Enter")findNear()});
+$("#cpGo").addEventListener("click",findNear);$("#cpInput").addEventListener("keydown",e=>{if(e.key==="Enter")findNear()});
 
-/* ---------- Precios reales (fase 2): precios.json junto a este archivo ---------- */
-async function loadRealPrices(){
-  try{
-    const r=await fetch("precios.json",{cache:"no-cache"});if(!r.ok)return;
-    const j=await r.json();
-    if(Array.isArray(j.products)&&j.products.length){
-      CATALOG=j.products;prepare(CATALOG);DATA_SOURCE="real";DATA_DATE=j.updated||"";
-      DATA_CHAINS=Object.keys(j.chains||{}).filter(c=>CHAINS[c]);
-      const before=S.list.length; S.list=S.list.filter(it=>byId(it.id));
-      if(S.list.length!==before){save("list"); if(!store.get("realNotice",false)){store.set("realNotice",true);toast("Ya hay precios reales: añade tus productos a la lista")}}
-      fillCats();renderList();renderCompare();renderSearch()}
-  }catch(e){}
-}
-
-/* ---------- Inicio ---------- */
-prepare(CATALOG);fillCats();renderBudget();renderList();renderCompare();renderSearch();renderHealth();renderNear();loadRealPrices();
+/* ================= Inicio ================= */
+function renderAll(){renderBudget();renderList();renderCompare();renderSearch();renderHealth();renderNear()}
+renderAll(); loadPrices();
 if("serviceWorker" in navigator && location.protocol==="https:"){navigator.serviceWorker.register("sw.js").catch(()=>{})}
 </script>
 </body>

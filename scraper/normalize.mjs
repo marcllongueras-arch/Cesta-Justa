@@ -9,6 +9,7 @@ const RE = /(?:(\d+)\s*[x×]\s*)?(\d+(?:[.,]\d+)?)\s*(kg|grs?|g|mg|litros?|lt|l|
 
 export function parseSize(text) {
   if (!text) return null;
+  text = String(text).replace(/(?:1\/2|media)\s*docena/gi, "6 ud").replace(/(\d+)\s*docenas?/gi, (_, n) => `${n * 12} ud`);
   let m, last = null;
   RE.lastIndex = 0;
   while ((m = RE.exec(text))) last = m;
