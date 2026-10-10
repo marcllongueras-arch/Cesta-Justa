@@ -3,11 +3,11 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { scrapeMercadona } from "./mercadona.mjs";
 import { scrapeConsum } from "./consum.mjs";
-import { scrapeAlcampo, scrapeBonpreu } from "./ocado.mjs";
 import { scrapeAhorramas } from "./ahorramas.mjs";
 import { normalize } from "./normalize.mjs";
 
-const SOURCES = { mercadona: scrapeMercadona, consum: scrapeConsum, ahorramas: scrapeAhorramas, alcampo: scrapeAlcampo, bonpreu: scrapeBonpreu };
+const ocado = name => async () => (await import("./ocado.mjs"))[name]();
+const SOURCES = { mercadona: scrapeMercadona, consum: scrapeConsum, ahorramas: scrapeAhorramas, alcampo: ocado("scrapeAlcampo"), bonpreu: ocado("scrapeBonpreu") };
 const only = (process.env.ONLY || "").split(",").filter(Boolean);
 
 let prev = { chains: {}, products: [] };
@@ -23,7 +23,7 @@ for (const [name, fn] of Object.entries(SOURCES)) {
   }
   try {
     const t = Date.now();
-    const LIMIT = 25 * 60 * 1000;   // ninguna cadena puede bloquear el resto
+    const LIMIT = 28 * 60 * 1000;   // ninguna cadena puede bloquear el resto
     const r = await Promise.race([fn(), new Promise((_, ko) => setTimeout(() => ko(new Error(`tardó más de ${LIMIT / 60000} min`)), LIMIT).unref())]);
     chains[name] = { ...r.meta, updated: today };
     products.push(...r.products.map(normalize));

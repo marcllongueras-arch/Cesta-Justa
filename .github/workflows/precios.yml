@@ -24,13 +24,19 @@ concurrency:
 jobs:
   precios:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Instalar Chrome automático (para Alcampo y Bonpreu)
+        run: |
+          npm init -y > /dev/null
+          npm install --no-save playwright@1.47.2
+          npx playwright install --with-deps chromium
 
       - name: Descargar precios de todas las cadenas
         env:
