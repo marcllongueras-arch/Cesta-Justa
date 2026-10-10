@@ -1,0 +1,22 @@
+name: Probar supermercados
+on:
+  workflow_dispatch:
+  push:
+    paths: ["scraper/probe.mjs"]
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: node scraper/probe.mjs
+      - run: |
+          git config user.name "cesta-justa-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add probe
+          git commit -m "Prueba de supermercados" || exit 0
+          git pull --rebase --autostash && git push
