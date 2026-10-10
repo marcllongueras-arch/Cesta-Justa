@@ -37,7 +37,11 @@ for (const [name, fn] of Object.entries(SOURCES)) {
     if (old.length) { chains[name] = prev.chains?.[name] || { products: old.length }; products.push(...old); }
   }
 }
-if (!ok) { console.error("Ninguna cadena se pudo actualizar."); process.exit(1); }
+if (!ok || products.length < 1000) {
+  console.error("No hay datos nuevos suficientes; se guarda solo el informe.");
+  await writeFile("estado.json", JSON.stringify({ updated: new Date().toISOString(), estado }, null, 1));
+  process.exit(0);
+}
 
 // Historial de precios (últimos 30 cambios por producto)
 let history = {};
@@ -54,3 +58,4 @@ await writeFile("precios.json", JSON.stringify({ version: 2, updated: today, cha
 await writeFile("historial.json", JSON.stringify(history));
 await writeFile("estado.json", JSON.stringify({ updated: new Date().toISOString(), estado }, null, 1));
 console.log(`Total: ${products.length} productos de ${Object.keys(chains).length} cadenas.`);
+process.exit(0);
