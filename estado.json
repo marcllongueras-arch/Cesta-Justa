@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-20T14:08:04.929Z",
+ "updated": "2026-11-21T13:35:33.724Z",
  "estado": {
   "mercadona": {
    "ok": true,
-   "products": 4396,
-   "seconds": 78,
+   "products": 4409,
+   "seconds": 73,
    "debug": null
   },
   "consum": {
    "ok": true,
-   "products": 9431,
-   "seconds": 72,
+   "products": 9427,
+   "seconds": 65,
    "debug": null
   },
   "ahorramas": {
    "ok": true,
-   "products": 2239,
-   "seconds": 202,
+   "products": 2237,
+   "seconds": 200,
    "debug": null
   },
   "lidl": {
    "ok": true,
-   "products": 431,
-   "seconds": 195,
+   "products": 432,
+   "seconds": 201,
    "debug": null
   }
  }
